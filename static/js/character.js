@@ -1362,8 +1362,9 @@ async function generateFieldContent() {
     const promptEl = document.getElementById('field-ai-prompt');
     const statusEl = document.getElementById('field-ai-status');
     
-    if (!promptEl || !statusEl) {
+    if (!promptEl || !statusEl || !modal) {
         console.warn('Field AI generator elements not found');
+        window.utils.showNotification('UI elements for field generation are missing.', 'error');
         return;
     }
     
@@ -1383,14 +1384,19 @@ async function generateFieldContent() {
         const fieldType = currentAIField.field;
         
         // Get local model setting
-        const useLocalModel = window.state.settings.model === 'local';
+        const useLocalModel = window.state && window.state.settings && window.state.settings.model === 'local';
+        
+        // Check if API endpoint exists
+        if (!window.API || !window.API.GENERATE_FIELD) {
+            throw new Error("Field generation API endpoint not available. Please check your configuration.");
+        }
         
         // Make request to backend to generate specific field content
         const response = await fetch(`${window.API.BASE_URL}${window.API.GENERATE_FIELD}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-API-Key': window.state.settings.apiKey
+                'X-API-Key': window.state.settings?.apiKey || ''
             },
             body: JSON.stringify({
                 prompt: prompt,
@@ -1400,11 +1406,21 @@ async function generateFieldContent() {
         });
         
         if (!response.ok) {
-            throw new Error(`Failed to generate ${fieldType}: ${response.statusText}`);
+            const errorText = await response.text();
+            console.error(`API error (${response.status}): ${errorText}`);
+            throw new Error(`Failed to generate ${fieldType}: Server returned ${response.status}`);
         }
         
-        const result = await response.json();
+        // Parse response JSON
+        let result;
+        try {
+            result = await response.json();
+        } catch (jsonError) {
+            console.error('Failed to parse response as JSON:', jsonError);
+            throw new Error('Server returned invalid JSON response');
+        }
         
+        // Check for success and content
         if (result.success && result.content) {
             console.log(`Generated ${fieldType} content:`, result.content);
             
@@ -1416,6 +1432,9 @@ async function generateFieldContent() {
                 // Trigger input event to make sure change is recognized
                 const event = new Event('input', { bubbles: true });
                 targetInput.dispatchEvent(event);
+            } else {
+                console.error(`Target input element ${currentAIField.targetId} not found`);
+                throw new Error(`Could not find input field to update (${currentAIField.targetId})`);
             }
             
             // Close the modal
@@ -1427,7 +1446,7 @@ async function generateFieldContent() {
         }
     } catch (error) {
         console.error(`Error generating ${currentAIField.field}:`, error);
-        window.utils.showNotification(`Failed to generate ${currentAIField.field}. Please try again.`, 'error');
+        window.utils.showNotification(`Failed to generate ${currentAIField.field}: ${error.message}`, 'error');
     } finally {
         // Hide status
         statusEl.classList.add('hidden');
@@ -1436,20 +1455,47 @@ async function generateFieldContent() {
 
 // Initialize field AI generator
 function initFieldAIGenerator() {
-    // Add event listeners to all field generate buttons
+    console.log('Initializing field AI generator...');
+    
+    // Check if the API endpoint is defined
+    if (!window.API || !window.API.GENERATE_FIELD) {
+        console.warn('Field generation API endpoint not available. Field AI generation will be disabled.');
+        return;
+    }
+    
+    // Find the modal and required elements
+    const modal = document.getElementById('field-ai-generator-modal');
     const generateButtons = document.querySelectorAll('.field-ai-generate-btn');
+    
+    // Check if modal exists
+    if (!modal) {
+        console.warn('Field AI generator modal not found in the DOM. Field AI generation will be disabled.');
+        return;
+    }
+    
+    // Check if any generation buttons exist
+    if (generateButtons.length === 0) {
+        console.warn('No field AI generation buttons found in the DOM.');
+        return;
+    }
+    
+    console.log(`Found ${generateButtons.length} field generation buttons to initialize`);
+    
+    // Add event listeners to all field generate buttons
     generateButtons.forEach(btn => {
         btn.addEventListener('click', (e) => {
             const fieldName = e.currentTarget.dataset.field;
             const targetId = e.currentTarget.dataset.target;
             if (fieldName && targetId) {
                 showFieldAIGeneratorModal(fieldName, targetId);
+            } else {
+                console.warn('Field AI button missing data attributes:', e.currentTarget);
+                window.utils.showNotification('This generation button is missing required configuration.', 'error');
             }
         });
     });
     
     // Add event listeners to modal controls
-    const modal = document.getElementById('field-ai-generator-modal');
     const closeBtn = document.getElementById('field-ai-modal-close');
     const cancelBtn = document.getElementById('field-ai-cancel');
     const generateBtn = document.getElementById('field-ai-generate');
@@ -1458,16 +1504,22 @@ function initFieldAIGenerator() {
         closeBtn.addEventListener('click', () => {
             modal.classList.add('hidden');
         });
+    } else {
+        console.warn('Field AI modal close button not found');
     }
     
     if (cancelBtn) {
         cancelBtn.addEventListener('click', () => {
             modal.classList.add('hidden');
         });
+    } else {
+        console.warn('Field AI modal cancel button not found');
     }
     
     if (generateBtn) {
         generateBtn.addEventListener('click', generateFieldContent);
+    } else {
+        console.warn('Field AI modal generate button not found');
     }
     
     // Add key listeners for prompt input
@@ -1479,7 +1531,11 @@ function initFieldAIGenerator() {
                 generateFieldContent();
             }
         });
+    } else {
+        console.warn('Field AI prompt input not found');
     }
+    
+    console.log('Field AI generator initialized successfully');
 }
 
 // Initialize character management

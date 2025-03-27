@@ -15,6 +15,10 @@ class Config:
     DEFAULT_MODEL = os.getenv("DEFAULT_MODEL", "deepseek/deepseek-llm-7b-chat")
     LOCAL_MODEL_URL = os.getenv("LOCAL_MODEL_URL", "http://localhost:11434/api/generate")
     
+    # Application metadata
+    APP_NAME = os.getenv("APP_NAME", "AI Character Chat")
+    APP_REFERER = os.getenv("APP_REFERER", "http://localhost:5000")
+    
     # Server settings
     DEBUG = os.getenv("DEBUG", "True").lower() == "true"
     HOST = os.getenv("HOST", "0.0.0.0")
@@ -114,7 +118,7 @@ ROLEPLAYING INSTRUCTIONS:
         os.makedirs(Config.SCENARIOS_FOLDER, exist_ok=True)  # Add this line
 
 
-        # Initialize templates if they don’t exist
+        # Initialize templates if they don't exist
         templates_file = os.path.join(Config.TEMPLATES_FOLDER, "prompt_templates.json")
         if not os.path.exists(templates_file):
             with open(templates_file, 'w') as f:

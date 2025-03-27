@@ -12,6 +12,7 @@ This file serves as the main entry point for the Flask application, initializing
 
 ## Functions
 - **index()**: Serves the static `index.html` file as the application's frontend.
+- **check_routes()**: Verifies that all critical API routes are properly registered.
 - Routes defined within modules registered via `register_*_routes()` functions (e.g., `register_character_routes()`, `register_chat_routes()`).
 
 ## Role in the Application
@@ -19,6 +20,7 @@ This file serves as the main entry point for the Flask application, initializing
 - Sets up the primary route (`/`) to serve the static frontend.
 - Acts as a central hub, importing and registering routes from other modules.
 - Manages the application's startup and runtime settings via `Config`.
+- Provides route verification to ensure API integrity.
 
 ## Interactions
 - **Imports**: `Flask`, `CORS`, `json`, `os`, `requests`, `uuid`, `datetime`, `Config` from `config.py`.
@@ -37,6 +39,14 @@ This file serves as the main entry point for the Flask application, initializing
 ## Overview
 This file manages configuration settings for the application, including API keys, model settings, file paths, and default prompt templates.
 
+## Properties
+- **API_KEYS**: OpenRouter API key for communicating with AI services.
+- **API and Model Settings**: Default model configuration and local model endpoints.
+- **Application Metadata**: APP_NAME and APP_REFERER for API service identification.
+- **Server Settings**: Host, port, and debug flags.
+- **Directory Paths**: Paths for data, static files, and various content folders.
+- **Default Templates**: Predefined prompt templates for AI interaction.
+
 ## Functions
 - **ensure_directories()**: Creates necessary directories (`CHARACTERS_FOLDER`, `MEMORY_FOLDER`, `TEMPLATES_FOLDER`, `CHAT_INSTANCES_FOLDER`) if they do not exist.
 
@@ -45,6 +55,7 @@ This file manages configuration settings for the application, including API keys
 - Loads environment variables from a `.env` file using `dotenv`.
 - Defines defaults for API keys, model URLs, file paths, and prompt templates.
 - Ensures the file system is prepared for character and memory storage.
+- Provides application metadata for external API services.
 
 ## Interactions
 - **Imports**: `os`, `dotenv`, `pathlib`.
@@ -108,15 +119,21 @@ This module handles player actions in the roleplaying context, enhancing system 
 This module integrates with AI models, handling requests to OpenRouter and local models, and processing responses.
 
 ## Functions
-- **register_ai_routes(app)**: Registers the `/api/models` route.
+- **register_ai_routes(app)**: Registers AI-related routes including generate-field.
 - **get_models()**: Retrieves available models from OpenRouter or returns defaults if no API key is provided.
-- **get_openrouter_response(system_prompt, user_message)**: Sends a request to OpenRouter for an AI response.
-- **get_local_model_response(system_prompt, user_message)**: Sends a request to a local model for an AI response.
-- **process_llm_response(response_text)**: Extracts structured data (e.g., mood, emotions, action) from AI responses.
+- **generate_text()**: Provides a general-purpose text generation endpoint.
+- **generate_json()**: Creates structured JSON outputs from AI responses.
+- **generate_field()**: Generates content for specific character fields (name, description, etc.).
+- **get_openrouter_response(system_prompt, user_message)**: Sends a request to OpenRouter with robust error handling.
+- **get_local_model_response(system_prompt, user_message)**: Sends a request to a local model.
+- **process_llm_response(response_text)**: Extracts structured data from AI responses.
+- **validate_json_response(response_text)**: Validates and extracts JSON from text.
 
 ## Role in the Application
 - Facilitates communication with AI models for response generation.
 - Processes raw AI outputs into structured data for use in the application.
+- Provides field-specific content generation with appropriate prompts.
+- Handles errors and missing configuration gracefully.
 
 ## Interactions
 - **Imports**: `flask` (`jsonify`, `request`), `json`, `requests`, `re`, `Config` from `config.py`.
@@ -142,15 +159,18 @@ This module handles CRUD operations for characters, managing their lifecycle.
 - **create_character()**: Creates a new character with default or provided attributes.
 - **update_character(character_id)**: Updates an existing character's attributes.
 - **delete_character(character_id)**: Deletes a character and its memory file.
+- **generate_field_fallback()**: Provides a fallback route for field-specific generation if the AI blueprint route is not registered.
 
 ## Role in the Application
 - Manages character data storage and retrieval.
 - Initializes memory files for new characters.
+- Ensures critical field generation functionality works even if primary routes fail.
 
 ## Interactions
 - **Imports**: `flask` (`jsonify`, `request`), `json`, `os`, `uuid`, `datetime`, `Config` from `config.py`.
 - **Registered In**: `app.py` via `register_character_routes()`.
 - **Interacts**: With the file system to read/write character (`CHARACTERS_FOLDER`) and memory (`MEMORY_FOLDER`) files using `os` and `json`.
+- **Uses**: `ai_integration.py` for field-specific generation through `generate_field()`.
 ```
 
 ---
@@ -407,8 +427,8 @@ The model configuration system manages AI model selection, interaction parameter
 #### Key Components
 
 - **Backend Components**:
-  - `config.py`: Defines `DEFAULT_MODEL` settings
-  - `ai_integration.py`: Handles model API communication
+  - `config.py`: Defines `DEFAULT_MODEL` settings and application metadata
+  - `ai_integration.py`: Handles model API communication with error handling
 
 - **Frontend Configuration**:
   - Models in Settings UI: For selection and parameter control
@@ -425,6 +445,35 @@ The application uses `deepseek/deepseek-llm-7b-chat` as the default model, confi
 
 - **Temperature**: Controls randomness (0.1-2.0)
 - **Response Length**: Controls verbosity
+
+### Field Generation System
+
+The field generation system provides AI-assisted content creation for specific character attributes.
+
+#### Key Components
+
+- **Backend Components**:
+  - `ai_integration.py`: Contains the `generate_field()` endpoint
+  - `character_management.py`: Provides a fallback route
+
+- **Frontend Components**:
+  - `character.js`: Manages UI and API communication
+
+#### Field Types
+
+- **name**: Character names with appropriate style
+- **description**: Character backgrounds and storylines
+- **appearance**: Physical descriptions and visual details
+- **personality**: Traits, habits, and psychological profiles
+- **speaking-style**: Voice characteristics and speech patterns
+- **greeting**: Initial character introductions
+
+#### Reliability Features
+
+- Multiple route registrations for redundancy
+- Graceful error handling for configuration issues
+- User-friendly error messages with specific details
+- Fallback mechanisms when components are unavailable
 
 ### Player Action System
 
@@ -455,20 +504,26 @@ The scene generation system creates rich narrative descriptions to enhance the r
 - **Novel Mode**: Expanded descriptions with toggle
 - **Cinematic Mode**: Detailed, immersive descriptions
 
-### Location System
+### Route Verification System
 
-The location system manages environment settings for character interactions.
+The route verification system ensures API endpoints are properly registered and available.
 
-#### Location Features
-- **AI Generation**: Creates contextually appropriate location names based on character type
-- **Manual Setting**: Allows users to set custom locations
-- **Persistence**: Locations are stored with chat instances
-- **Scene Integration**: Locations inform scene descriptions for greater narrative coherence
+#### Key Components
+- **app.py**: Contains the `check_routes()` function
+- Route registration tracking in initialization
 
-#### Location Types
-- Character-specific locations (aligned with personality and background)
-- Theme-appropriate locations (fantasy, sci-fi, modern, etc.)
-- Dynamically changing locations as conversations evolve
+#### Verified Routes
+- `/api/characters`: Character management endpoints
+- `/api/generate-character`: Character generation endpoint
+- `/api/generate-field`: Field-specific generation endpoint
+- `/api/chat`: Chat messaging endpoint
+- `/api/models`: Model listing endpoint
+
+#### Benefits
+- Early detection of missing routes
+- Simplified troubleshooting
+- Consistent API availability
+- Better error reporting
 
 ### Summary
 This documentation outlines each Python module's purpose, functionality, and interactions within the Flask application, along with the integrated systems they form. The app is a modular system where `app.py` ties together components for configuration (`config.py`), AI integration (`ai_integration.py`), character management (`character_management.py`, `character_generation.py`), chat (`chat_management.py`, `chat_instances.py`, `player_actions.py`, `scene_generation.py`, `memory_management.py`), system oversight (`system_management.py`), and prompt handling (`prompt_management.py`). Each module leverages shared resources like `Config` and interacts through function calls and file system operations to deliver a robust AI character interaction platform.

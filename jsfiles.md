@@ -58,7 +58,14 @@ Here's a detailed breakdown of what each script in the modularized application h
   - `openCreateCharacterModal()` & `openEditCharacterModal()` - Modal interfaces
   - `saveCharacter()` & `deleteCurrentCharacter()` - Character CRUD operations
   - `generateCharacter()` - AI-assisted character creation
+  - `initFieldAIGenerator()` - Sets up field-specific AI generation buttons
+  - `generateFieldContent()` - Processes AI-assisted field content generation
   - Character stats management functions
+- **Error handling**:
+  - Robust validation of API endpoints and DOM elements
+  - Comprehensive error handling for API calls with detailed user feedback
+  - Fallback mechanisms for missing configurations
+  - Graceful degradation when components are unavailable
 
 ## 7. **settings.js**
 **Purpose**: Manages application settings and configuration.
@@ -207,6 +214,35 @@ The theme and display system manages the visual presentation with different them
 - **Simple Mode**: Minimal scene descriptions
 - **Novel Mode**: Expanded descriptions with toggle
 - **Cinematic Mode**: Enhanced visual styling
+
+### Field-Specific AI Generation System
+
+The field-specific AI generation system provides targeted content generation for individual character attributes.
+
+#### Key Components
+- **character.js**: Core field generation functionality
+- **Field Generation UI**: Modal interface with tailored prompts
+
+#### Field Types Supported
+- **Name**: Character name generation
+- **Description**: Character background and story
+- **Appearance**: Physical description and visuals
+- **Personality**: Character traits and behaviors
+- **Speaking Style**: Voice, speech patterns, and expressions
+- **Greeting**: Initial character introduction
+
+#### Generation Process
+1. User clicks field-specific generation button
+2. Modal opens with relevant context
+3. User provides a prompt for generation
+4. AI generates content specifically for that field
+5. Content is inserted into the appropriate input
+
+#### Error Handling
+- Component validation before initialization
+- API endpoint checking with graceful degradation
+- Comprehensive error reporting to users
+- Automatic recovery from common failures
 
 ## Cross-Module Interactions
 

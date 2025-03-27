@@ -134,7 +134,7 @@ def generate_text():
         data = request.get_json()
         
         if not data or 'prompt' not in data:
-            return jsonify({"error": "Prompt is required"}), 400
+            return jsonify({"success": False, "message": "Prompt is required"}), 400
             
         prompt = data.get('prompt')
         system_prompt = data.get('system_prompt', 'You are a helpful AI assistant.')
@@ -149,10 +149,10 @@ def generate_text():
             max_tokens=max_tokens
         )
         
-        return jsonify({"text": response})
+        return jsonify({"success": True, "text": response})
             
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"success": False, "message": str(e)}), 500
 
 @ai_bp.route('/api/generate-json', methods=['POST'])
 def generate_json():
@@ -172,7 +172,7 @@ def generate_json():
         data = request.get_json()
         
         if not data or 'prompt' not in data:
-            return jsonify({"error": "Prompt is required"}), 400
+            return jsonify({"success": False, "message": "Prompt is required"}), 400
             
         prompt = data.get('prompt')
         system_prompt = data.get('system_prompt', 'You are a helpful AI assistant. Respond with valid JSON only.')
@@ -194,15 +194,16 @@ def generate_json():
         # Parse and validate the JSON response
         try:
             json_data = validate_json_response(response)
-            return jsonify(json_data)
+            return jsonify({"success": True, "data": json_data})
         except ValueError as e:
             return jsonify({
-                "error": f"Failed to parse AI response as JSON: {str(e)}",
+                "success": False,
+                "message": f"Failed to parse AI response as JSON: {str(e)}",
                 "raw_response": response
             }), 400
             
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"success": False, "message": str(e)}), 500
 
 @ai_bp.route('/api/generate-field', methods=['POST'])
 def generate_field():
@@ -221,13 +222,13 @@ def generate_field():
         data = request.get_json()
         
         if not data:
-            return jsonify({"error": "Request data is required"}), 400
+            return jsonify({"success": False, "message": "Request data is required"}), 400
             
         if 'prompt' not in data:
-            return jsonify({"error": "Prompt is required"}), 400
+            return jsonify({"success": False, "message": "Prompt is required"}), 400
             
         if 'field_type' not in data:
-            return jsonify({"error": "Field type is required"}), 400
+            return jsonify({"success": False, "message": "Field type is required"}), 400
         
         prompt = data.get('prompt')
         field_type = data.get('field_type')
@@ -235,12 +236,12 @@ def generate_field():
         
         # Define appropriate system prompts based on field type
         system_prompts = {
-            'name': "You are a creative writer specializing in character names. Generate a single name appropriate for the description. Respond with just the name, no explanation.",
-            'description': "You are a creative writer specializing in character backgrounds. Create a rich, detailed character description based on the prompt. No meta-commentary.",
-            'greeting': "You are a creative writer specializing in character dialogue. Create a greeting message that this character would say when first meeting someone. Make it match their personality. First person perspective only.",
-            'appearance': "You are a creative writer specializing in character descriptions. Create a detailed physical description of a character based on the prompt, including their clothing and distinctive features. No meta-commentary.",
-            'personality': "You are a creative writer specializing in character development. Create a detailed personality description based on the prompt, including traits, habits, likes and dislikes. No meta-commentary.",
-            'speaking-style': "You are a creative writer specializing in dialogue. Describe in detail how this character speaks, including any speech patterns, accents, or phrases they commonly use. No meta-commentary."
+            'name': "You are a creative writer specializing in character names. Generate a single name appropriate for the description. Respond with just the name, no explanation or additional text.",
+            'description': "You are a creative writer specializing in character backgrounds. Create a rich, detailed character description based on the prompt. Include background, motivations, and key life events. No meta-commentary.",
+            'greeting': "You are a creative writer specializing in character dialogue. Create a greeting message that this character would say when first meeting someone. Make it match their personality. First person perspective only. Keep it under 150 characters.",
+            'appearance': "You are a creative writer specializing in character descriptions. Create a detailed physical description of a character based on the prompt, including their clothing, distinctive features, physical build, and overall visual impression. No meta-commentary.",
+            'personality': "You are a creative writer specializing in character development. Create a detailed personality description based on the prompt, including traits, habits, likes, dislikes, quirks, fears, and values. No meta-commentary.",
+            'speaking-style': "You are a creative writer specializing in dialogue. Describe in detail how this character speaks, including any speech patterns, accents, vocabulary level, phrases they commonly use, and verbal mannerisms. No meta-commentary."
         }
         
         # Set system prompt based on field type
@@ -248,12 +249,12 @@ def generate_field():
         
         # Create field-specific prompt
         field_prompts = {
-            'name': f"Generate a character name based on this description: {prompt}",
-            'description': f"Write a rich character background and description based on: {prompt}",
-            'greeting': f"Create a greeting message that this character would say when first meeting someone. Character info: {prompt}",
-            'appearance': f"Describe the physical appearance of a character based on: {prompt}",
-            'personality': f"Create a detailed personality description for a character based on: {prompt}",
-            'speaking-style': f"Describe in detail how this character speaks based on: {prompt}"
+            'name': f"Generate a character name based on this description: {prompt}. Only respond with the name itself, no additional text.",
+            'description': f"Write a rich character background and description based on: {prompt}. Include their background story, current situation, and any defining life events.",
+            'greeting': f"Create a greeting message that this character would say when first meeting someone. Character info: {prompt}. Write ONLY the greeting message in first person, as if the character is speaking.",
+            'appearance': f"Describe the physical appearance of a character based on: {prompt}. Include body type, clothing style, facial features, and any distinctive characteristics.",
+            'personality': f"Create a detailed personality description for a character based on: {prompt}. Include their temperament, values, habits, likes, dislikes, and interpersonal style.",
+            'speaking-style': f"Describe in detail how this character speaks based on: {prompt}. Include their vocabulary, accent, speech patterns, and any verbal quirks or phrases they commonly use."
         }
         
         formatted_prompt = field_prompts.get(field_type, prompt)
@@ -280,6 +281,26 @@ def generate_field():
             # Limit to reasonable name length
             if len(content) > 50:
                 content = content[:50]
+                
+            # Remove any additional text after a period or newline
+            period_index = content.find('.')
+            if period_index > 0:
+                content = content[:period_index]
+                
+            newline_index = content.find('\n')
+            if newline_index > 0:
+                content = content[:newline_index]
+        
+        elif field_type == 'greeting':
+            # For greetings, ensure it's not too long
+            lines = content.split('\n')
+            content = lines[0] if lines else content
+            
+            if len(content) > 200:
+                content = content[:197] + "..."
+                
+            # Remove any quotes that might surround the greeting
+            content = content.strip().strip('"\'').strip()
         
         return jsonify({
             "success": True,
@@ -316,11 +337,15 @@ def get_openrouter_response(system_prompt, user_message, temperature=0.7, max_to
     if not api_key:
         raise ValueError("OpenRouter API key not found. Please set the OPENROUTER_API_KEY in config.py or environment variables.")
     
+    # Safely get app referrer and name with defaults
+    app_referer = getattr(Config, 'APP_REFERER', 'http://localhost:5000')
+    app_name = getattr(Config, 'APP_NAME', 'AI Character Chat')
+    
     headers = {
         "Content-Type": "application/json",
         "Authorization": f"Bearer {api_key}",
-        "HTTP-Referer": Config.APP_REFERER,
-        "X-Title": Config.APP_NAME
+        "HTTP-Referer": app_referer,
+        "X-Title": app_name
     }
     
     model_name = Config.DEFAULT_MODEL or "openai/gpt-3.5-turbo"

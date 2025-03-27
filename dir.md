@@ -4,8 +4,8 @@ This document provides a comprehensive overview of all files in the AI Character
 
 ## Root Directory
 
-- **app.py** - Main Flask application entry point, handles routes and API endpoints
-- **config.py** - Configuration settings and environment variables management
+- **app.py** - Main Flask application entry point, handles routes and API endpoints, includes route verification
+- **config.py** - Configuration settings and environment variables management, includes application metadata
 - **requirements.txt** - Python dependencies required for the application
 - **.env** - Environment variables for configuration
 - **start.bat** - Windows batch script to start the application
@@ -16,9 +16,9 @@ This document provides a comprehensive overview of all files in the AI Character
 Core Python modules that power the application backend:
 
 - **__init__.py** - Package initialization for modules
-- **ai_integration.py** - Integration with AI models for generating responses and content
+- **ai_integration.py** - Integration with AI models for generating responses and content, includes robust error handling
 - **character_generation.py** - Logic for generating new AI characters dynamically
-- **character_management.py** - Management of character profiles, attributes, and metadata
+- **character_management.py** - Management of character profiles, attributes, and metadata, includes fallback routes
 - **chat_instances.py** - Handles multiple chat instances and their management
 - **chat_management.py** - Core chat functionality, message processing, and history
 - **memory_management.py** - Long-term memory and context management for characters
@@ -47,7 +47,7 @@ Frontend assets and client-side code:
 - **js/app.js** - Main application initialization and setup
 - **js/app1.js** - Extended application functionality
 - **js/appdebugger.js** - Debugging utilities for development
-- **js/character.js** - Character creation and management on the frontend
+- **js/character.js** - Character creation and management on the frontend, including field-specific AI generation
 - **js/chat.js** - Chat interface and message handling
 - **js/chat-instances.js** - Management of multiple chat instances
 - **js/common.js** - Common utilities used across the application
@@ -106,7 +106,9 @@ Server-side templates:
 ## Key Features
 
 - Dynamic character generation and management
+- Field-specific AI content generation with robust error handling
 - Interactive chat experiences with AI characters
 - Memory management for persistent character knowledge
 - Scenario generation and management
-- Player-driven actions and interactions 
+- Player-driven actions and interactions
+- API route verification and fallbacks for improved reliability 

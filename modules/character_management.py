@@ -105,3 +105,14 @@ def register_character_routes(app):
             os.remove(memory_path)
         
         return jsonify({"success": True})
+
+    # Route to ensure our field generation feature works
+    @app.route('/api/generate-field', methods=['POST'])
+    def generate_field_fallback():
+        """
+        Fallback route for field-specific generation.
+        This ensures that if the AI blueprint route is not registered properly,
+        the feature will still work.
+        """
+        from modules.ai_integration import generate_field
+        return generate_field()

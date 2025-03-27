@@ -62,6 +62,33 @@ register_chat_instance_routes(app)
 register_scenario_routes(app)
 register_scenario_generation_routes(app)
 
+# Verify critical API routes are registered
+@app.route('/api/check-routes', methods=['GET'])
+def check_routes():
+    """Check if all critical API routes are registered"""
+    routes = {}
+    for rule in app.url_map.iter_rules():
+        routes[str(rule)] = list(rule.methods)
+    
+    critical_routes = [
+        "/api/characters",
+        "/api/generate-character",
+        "/api/generate-field",
+        "/api/chat",
+        "/api/models"
+    ]
+    
+    status = {route: route in routes for route in critical_routes}
+    return {
+        "success": all(status.values()),
+        "routes": status
+    }
+
 # Main application entry point
 if __name__ == '__main__':
+    # Verify critical API routes before starting
+    print("Verifying API routes...")
+    for rule in app.url_map.iter_rules():
+        print(f"Route: {rule} Methods: {rule.methods}")
+    
     app.run(host=Config.HOST, port=Config.PORT, debug=Config.DEBUG)
