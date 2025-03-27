@@ -17,9 +17,6 @@ from modules.system_management import register_system_routes
 from modules.prompt_management import register_prompt_routes
 from modules.chat_instances import register_chat_instance_routes  
 
-from modules.scenario_management import register_scenario_routes
-from modules.scenario_generation import register_scenario_generation_routes
-
 print(f"STATIC_FOLDER configured as: {Config.STATIC_FOLDER}")
 print(f"Does this path exist? {os.path.exists(Config.STATIC_FOLDER)}")
 print(f"Does index.html exist? {os.path.exists(os.path.join(Config.STATIC_FOLDER, 'index.html'))}")
@@ -47,10 +44,6 @@ CORS(app)  # Enable CORS for all routes
 def index():
     return send_from_directory(Config.STATIC_FOLDER, 'index.html')
 
-@app.route('/scenario-creation.html')
-def scenario_creation():
-    return send_from_directory(Config.STATIC_FOLDER, 'scenario-creation.html')
-
 # Register all routes from modules
 register_character_routes(app)
 register_chat_routes(app)
@@ -59,8 +52,6 @@ register_ai_routes(app)
 register_system_routes(app)
 register_prompt_routes(app)
 register_chat_instance_routes(app) 
-register_scenario_routes(app)
-register_scenario_generation_routes(app)
 
 # Verify critical API routes are registered
 @app.route('/api/check-routes', methods=['GET'])

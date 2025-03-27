@@ -112,9 +112,8 @@ Here's a detailed breakdown of what each script in the modularized application h
 - **Main functions**:
   - `showHomepage()` - Displays the homepage view
   - `initHomepage()` - Sets up homepage components
-  - `createCharacterCard()` & `createScenarioCard()` - Renders UI elements
+  - `createCharacterCard()` - Renders UI elements
   - `startChatWithCharacter()` - Initiates character chats
-  - `playScenario()` - Handles scenario interactions
 
 ## 12. **app.js**
 **Purpose**: Main application entry point that coordinates all modules.

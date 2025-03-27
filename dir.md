@@ -22,11 +22,9 @@ Core Python modules that power the application backend:
 - **chat_instances.py** - Handles multiple chat instances and their management
 - **chat_management.py** - Core chat functionality, message processing, and history
 - **memory_management.py** - Long-term memory and context management for characters
-- **player_actions.py** - Handles player-initiated actions in chats and scenarios
+- **player_actions.py** - Handles player-initiated actions in chats
 - **prompt_management.py** - Management of system prompts and templates
-- **scenario_generation.py** - Generation of interactive scenarios and story elements
-- **scenario_management.py** - Management of scenarios, scenes, and narrative progression
-- **scene_generation.py** - Generation of individual scenes within scenarios
+- **scene_generation.py** - Generation of interactive scenes and descriptive elements
 - **system_management.py** - System utilities and application-wide functions
 
 ## Static Directory
@@ -35,11 +33,8 @@ Frontend assets and client-side code:
 
 ### HTML:
 - **index.html** - Main application homepage with chat interface
-- **create-scenario.html** - Interface for creating new scenarios
-- **scenario-creation.html** - Advanced scenario creation tools
 
 ### CSS:
-- **css/guided-scenario.css** - Styles for guided scenario interfaces
 - **css/homepage.css** - Styles for the main homepage
 - **css/style.css** - Global application styles
 
@@ -53,13 +48,10 @@ Frontend assets and client-side code:
 - **js/common.js** - Common utilities used across the application
 - **js/core.js** - Core functionality and initialization
 - **js/events.js** - Event handling and custom events
-- **js/guided-scenario.js** - Interactive guided scenario functionality
 - **js/homepage.js** - Homepage-specific functionality
 - **js/interactions.js** - User interaction handling
 - **js/player-action.js** - Player action implementation in the UI
 - **js/prompt-templates.js** - Management of prompt templates in the UI
-- **js/scenario.js** - Scenario display and interaction
-- **js/scenario-creation.js** - Scenario creation interface functionality
 - **js/settings.js** - User settings and preferences management
 - **js/templates.js** - Client-side templating
 - **js/theme.js** - Theme and appearance management
@@ -72,7 +64,6 @@ Storage for application data:
 - **characters/** - Character profile JSON files
 - **chat_instances/** - Saved chat instance data
 - **memory/** - Character memory data storage
-- **scenarios/** - Saved scenario configurations
 - **templates/** - Template data including prompt templates
 
 ## Templates Directory
@@ -109,6 +100,5 @@ Server-side templates:
 - Field-specific AI content generation with robust error handling
 - Interactive chat experiences with AI characters
 - Memory management for persistent character knowledge
-- Scenario generation and management
 - Player-driven actions and interactions
 - API route verification and fallbacks for improved reliability 

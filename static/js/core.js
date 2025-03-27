@@ -194,13 +194,6 @@ function createViewOptions() {
         }
     }
 }
-window.API = {
-    BASE_URL: "", // Empty string if same domain, or your server URL
-    CHARACTERS: "/api/characters",
-    CHAT: "/api/chat",
-    CHAT_HISTORY: "/api/chat/history",
-    // Other API endpoints...
-};
 
 // Initialize the application
 function initCore() {

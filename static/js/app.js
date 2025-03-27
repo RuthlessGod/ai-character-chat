@@ -97,8 +97,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Initialize homepage
-    if (window.homepage && window.homepage.init) {
-        window.homepage.init();
+    if (window.initHomepage) {
+        window.initHomepage();
     }
     
     // Initialize chat instances - do this AFTER ensuring the homepage is visible
@@ -130,8 +130,8 @@ document.addEventListener('DOMContentLoaded', function() {
     if (chatControls) chatControls.classList.add('hidden');
     
     // Use the homepage's scroll function if available, otherwise implement robust scrolling here
-    if (window.homepage && window.homepage.scrollHomepage) {
-        window.homepage.scrollHomepage();
+    if (window.scrollHomepage) {
+        window.scrollHomepage();
     } else {
         // Find all possible scrollable elements
         const appContainer = document.querySelector('.app-container');

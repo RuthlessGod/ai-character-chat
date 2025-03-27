@@ -32,37 +32,6 @@ const featuredCharacters = [
     }
 ];
 
-const popularScenarios = [
-    {
-        id: 'scen1',
-        name: 'Enchanted Forest Adventure',
-        description: 'Explore a magical forest filled with wonders and dangers.',
-        category: 'fantasy',
-        plays: 1245
-    },
-    {
-        id: 'scen2',
-        name: 'Space Station Omega',
-        description: 'Survive on a damaged space station orbiting a dying star.',
-        category: 'sci-fi',
-        plays: 879
-    },
-    {
-        id: 'scen3',
-        name: 'Murder at Midnight',
-        description: 'Solve a perplexing murder in a 1940s noir setting.',
-        category: 'mystery',
-        plays: 1632
-    },
-    {
-        id: 'scen4',
-        name: 'Haunted Mansion',
-        description: 'Uncover the secrets of an abandoned mansion with a dark history.',
-        category: 'horror',
-        plays: 2365
-    }
-];
-
 // Function to properly scroll the homepage to the top, with retries
 function scrollHomepage() {
     // Find the main scrollable container for the homepage
@@ -181,8 +150,6 @@ function initHomepage() {
     
     // Set up event listeners
     const createCharacterBtn = document.getElementById('hp-create-character-btn');
-    const createScenarioBtn = document.getElementById('hp-create-scenario-btn');
-    const tabButtons = document.querySelectorAll('.homepage-tab');
     const homeLogo = document.getElementById('home-logo');
     
     if (homeLogo) {
@@ -199,15 +166,8 @@ function initHomepage() {
         });
     }
     
-    if (createScenarioBtn) {
-        createScenarioBtn.addEventListener('click', () => {
-            console.log('Create scenario button clicked');
-            // Update this to point to our new guided scenario creation page
-            window.location.href = '/static/create-scenario.html';
-        });
-    }
-    
     // Tab switching
+    const tabButtons = document.querySelectorAll('.homepage-tab');
     if (tabButtons) {
         tabButtons.forEach(tab => {
             tab.addEventListener('click', () => {
@@ -248,154 +208,78 @@ function initHomepage() {
         });
         
         // Populate featured characters
-        const charactersGrid = document.getElementById('featured-characters-grid');
-        featuredCharacters.forEach(character => {
-            const card = createCharacterCard(character);
-            charactersGrid.appendChild(card);
-        });
-        
-        // Populate popular scenarios
-        const scenariosGrid = document.getElementById('popular-scenarios-grid');
-        popularScenarios.forEach(scenario => {
-            const card = createScenarioCard(scenario);
-            scenariosGrid.appendChild(card);
-        });
-    }, 1000);
-}
-
-// Helper function to create a character card
-function createCharacterCard(character) {
-    const card = document.createElement('div');
-    card.className = 'character-card';
-    card.setAttribute('data-character-id', character.id);
-    
-    card.innerHTML = `
-        <div class="character-card-content">
-            <div class="character-avatar">
-                <i class="fas fa-user"></i>
-            </div>
-            <div class="character-info">
-                <h3 class="character-name">${character.name}</h3>
-                <p class="character-description">${character.description}</p>
-                <div class="character-meta">
-                    <span class="character-category">${character.category}</span>
-                    <span class="character-interactions">${character.interactions.toLocaleString()} chats</span>
-                </div>
-            </div>
-        </div>
-        <div class="card-footer">
-            <button class="start-chat-btn">Start Chatting</button>
-        </div>
-    `;
-    
-    // Add click event to start chatting
-    card.addEventListener('click', (e) => {
-        // Prevent default behavior of clicking on featured characters that aren't implemented
-        e.preventDefault();
-        
-        // Show notification that these are example characters
-        if (window.utils && window.utils.showNotification) {
-            window.utils.showNotification('These are example characters and not fully implemented yet.', 'info');
-        } else {
-            alert('These are example characters and not fully implemented yet.');
-        }
-    });
-    
-    return card;
-}
-
-// Helper function to create a scenario card
-function createScenarioCard(scenario) {
-    const card = document.createElement('div');
-    card.className = 'scenario-card';
-    card.setAttribute('data-scenario-id', scenario.id);
-    
-    card.innerHTML = `
-        <div class="scenario-image">
-            <div class="scenario-plays">${scenario.plays} plays</div>
-        </div>
-        <div class="scenario-content">
-            <h3 class="scenario-name">${scenario.name}</h3>
-            <p class="scenario-description">${scenario.description}</p>
-            <span class="character-category">${scenario.category}</span>
-        </div>
-        <div class="card-footer">
-            <button class="play-scenario-btn">Play Scenario</button>
-        </div>
-    `;
-    
-    // Add click event to play scenario
-    card.addEventListener('click', () => {
-        playScenario(scenario.id);
-    });
-    
-    return card;
-}
-
-// Function to start chat with a character
-function startChatWithCharacter(characterId) {
-    console.log('Starting chat with character:', characterId);
-    
-    // Hide homepage and welcome screen
-    document.getElementById('homepage').classList.add('hidden');
-    document.getElementById('welcome-screen').classList.add('hidden');
-    
-    // Show chat interface
-    document.getElementById('chat-interface').classList.remove('hidden');
-    
-    // Show chat controls
-    document.getElementById('chat-controls').classList.remove('hidden');
-    
-    // This would normally load the character and start a chat
-    // For now, just simulate it by calling the loadCharacter function if available
-    if (window.character && window.character.loadCharacter) {
-        window.character.loadCharacter(characterId);
-    }
-}
-
-// Function to play a scenario
-function playScenario(scenarioId) {
-    console.log('Playing scenario:', scenarioId);
-    
-    // This would be implemented in a future version
-    if (window.utils && window.utils.showNotification) {
-        window.utils.showNotification('Scenario play feature coming soon!', 'info');
-    } else {
-        alert('Scenario play feature coming soon!');
-    }
-}
-
-// Initialize the homepage when the DOM is loaded
-// In core.js or app.js initialization
-document.addEventListener('DOMContentLoaded', function() {
-    // Set up home button in header
-    const homeButton = document.getElementById('home-logo');
-    if (homeButton) {
-        homeButton.addEventListener('click', function() {
-            // Only show homepage if we're not already creating a new scenario
-            if (!window.location.href.includes('scenario-creation.html')) {
-                if (window.homepage && window.homepage.show) {
-                    window.homepage.show();
+        loadUserCharacters().then(characters => {
+            const characterContainer = document.querySelector('.character-card-container');
+            if (characterContainer) {
+                characterContainer.innerHTML = '';
+                if (characters && characters.length > 0) {
+                    characters.forEach(character => {
+                        const card = createCharacterCard(character);
+                        characterContainer.appendChild(card);
+                    });
                 } else {
-                    // Fallback if homepage.show isn't available
-                    const homepage = document.getElementById('homepage');
-                    const chatInterface = document.getElementById('chat-interface');
-                    const welcomeScreen = document.getElementById('welcome-screen');
-                    
-                    if (homepage) homepage.classList.remove('hidden');
-                    if (chatInterface) chatInterface.classList.add('hidden');
-                    if (welcomeScreen) welcomeScreen.classList.add('hidden');
+                    // Show featured characters as fallback
+                    featuredCharacters.forEach(character => {
+                        const card = createCharacterCard(character);
+                        characterContainer.appendChild(card);
+                    });
                 }
             }
         });
-    }
-});
+        
+        // Clear scenario container since we removed scenario functionality
+        const scenarioContainer = document.querySelector('.scenario-card-container');
+        if (scenarioContainer) {
+            scenarioContainer.innerHTML = '<div class="empty-scenario-message">Scenario functionality has been removed.</div>';
+        }
+    }, 300);
+    
+    console.log('Homepage initialization complete');
+}
 
-// Make the homepage functions available to other modules
-window.homepage = {
-    show: showHomepage,
-    init: initHomepage,
-    startChat: startChatWithCharacter,
-    playScenario: playScenario,
-    scrollHomepage: scrollHomepage
-};
+// Create a character card for the homepage
+function createCharacterCard(character) {
+    const card = document.createElement('div');
+    card.className = 'character-card';
+    card.setAttribute('data-id', character.id);
+    
+    // Create a random hue for character card (for visual variety)
+    const hue = Math.floor(Math.random() * 360);
+    card.style.setProperty('--character-color', `hsl(${hue}, 70%, 65%)`);
+    
+    // Generate card content
+    card.innerHTML = `
+        <h3 class="character-name">${character.name || 'Unnamed Character'}</h3>
+        <p class="character-description">${character.description || 'No description available.'}</p>
+        <div class="character-meta">
+            <span class="character-category">${character.category || 'General'}</span>
+            <span class="character-stats">${character.interactions || 0} chats</span>
+        </div>
+        <button class="start-chat-btn">Start Chat</button>
+    `;
+    
+    // Add click event to start chat
+    card.querySelector('.start-chat-btn').addEventListener('click', () => {
+        startChatWithCharacter(character.id);
+    });
+    
+    return card;
+}
+
+// Function to start a chat with a selected character
+function startChatWithCharacter(characterId) {
+    console.log(`Starting chat with character ${characterId}`);
+    
+    // Call the createNewChat function if it exists
+    if (typeof createNewChat === 'function') {
+        createNewChat(characterId);
+    } else {
+        console.error('createNewChat function not found');
+        showNotification('Could not start chat. The chat creation feature is not available.', 'error');
+    }
+}
+
+// Export functions that should be globally available
+window.showHomepage = showHomepage;
+window.initHomepage = initHomepage;
+window.startChatWithCharacter = startChatWithCharacter;
