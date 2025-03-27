@@ -122,15 +122,59 @@ function renderCharacterList() {
                 </div>
                 <div class="character-summary">${character.mood || 'Neutral'} · ${window.utils.formatTimeAgo(character.updated_at)}</div>
             </div>
+            <div class="character-actions">
+                <button class="character-edit-btn" title="Edit character">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button class="character-delete-btn" title="Delete character">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+            </div>
         `;
         
-        // Use delegation pattern for click events
-        item.addEventListener('click', () => loadCharacter(character.id));
+        // Add click event listener for the character item (excluding the buttons)
+        item.addEventListener('click', (e) => {
+            // Only load character if not clicking on the action buttons
+            if (!e.target.closest('.character-actions')) {
+                loadCharacter(character.id);
+            }
+        });
+        
+        // After item is added to DOM, add specific button event listeners
         fragment.appendChild(item);
     });
     
     // Append all characters at once
     window.elements.characterList.appendChild(fragment);
+    
+    // Now add specific button event listeners
+    window.elements.characterList.querySelectorAll('.character-edit-btn').forEach(btn => {
+        const characterId = btn.closest('.character-item').dataset.characterId;
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent triggering the character item click
+            
+            // Find character in state and open edit modal
+            const characterToEdit = window.state.characters.find(c => c.id === characterId);
+            if (characterToEdit) {
+                openEditCharacterModal(characterToEdit);
+            }
+        });
+    });
+    
+    window.elements.characterList.querySelectorAll('.character-delete-btn').forEach(btn => {
+        const characterId = btn.closest('.character-item').dataset.characterId;
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent triggering the character item click
+            
+            // Find character in state
+            const characterToDelete = window.state.characters.find(c => c.id === characterId);
+            if (characterToDelete) {
+                if (confirm(`Are you sure you want to delete ${characterToDelete.name}? This action cannot be undone.`)) {
+                    deleteCharacter(characterId);
+                }
+            }
+        });
+    });
 }
 
 // Load a specific character
@@ -927,6 +971,62 @@ async function deleteCurrentCharacter() {
     }
 }
 
+// Delete a character by ID
+async function deleteCharacter(characterId) {
+    if (!characterId) {
+        console.warn('No character ID provided for deletion');
+        return;
+    }
+    
+    // Find character name for notification
+    const character = window.state.characters.find(c => c.id === characterId);
+    const characterName = character ? character.name : 'Character';
+    
+    console.log(`Deleting character: ${characterName} (${characterId})`);
+    
+    try {
+        window.utils.showLoading();
+        
+        const response = await fetch(`${window.API.BASE_URL}${window.API.CHARACTERS}/${characterId}`, {
+            method: 'DELETE'
+        });
+        
+        if (response.ok) {
+            // Remove from list (create new array)
+            window.state.characters = window.state.characters.filter(c => c.id !== characterId);
+            
+            // If this was the current character, clear it
+            if (window.state.currentCharacter && window.state.currentCharacter.id === characterId) {
+                cleanupCurrentCharacter();
+                window.state.currentCharacter = null;
+                
+                // Show welcome screen if no characters left
+                if (window.state.characters.length === 0) {
+                    if (window.elements.welcomeScreen && window.elements.chatInterface) {
+                        window.elements.welcomeScreen.classList.remove('hidden');
+                        window.elements.chatInterface.classList.add('hidden');
+                    }
+                } else {
+                    // Load first character
+                    loadCharacter(window.state.characters[0].id);
+                }
+            }
+            
+            // Update UI
+            renderCharacterList();
+            
+            window.utils.showNotification(`Character "${characterName}" deleted successfully.`, 'success');
+        } else {
+            throw new Error(`Failed to delete character: ${response.statusText}`);
+        }
+    } catch (error) {
+        console.error('Error deleting character:', error);
+        window.utils.showNotification(`Failed to delete character "${characterName}". Please try again.`, 'error');
+    } finally {
+        window.utils.hideLoading();
+    }
+}
+
 // Generate character using AI
 async function generateCharacter() {
     if (!window.elements.aiPromptInput || !window.elements.generationStatus) {
@@ -1303,6 +1403,7 @@ window.character = {
     openEditCharacterModal: openEditCharacterModal,
     saveCharacter: saveCharacter,
     deleteCurrentCharacter: deleteCurrentCharacter,
+    deleteCharacter: deleteCharacter,
     generateCharacter: generateCharacter,
     updateCharacterUI: updateCharacterUI
 };
