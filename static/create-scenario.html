@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Scenario - AI Character Chat</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/guided-scenario.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo" id="home-logo" style="cursor: pointer;">
+                <a href="/static/index.html">
+                    <i class="fas fa-robot"></i>
+                    <h1>AI Character Chat</h1>
+                </a>
+            </div>
+            <div class="header-controls">
+                <button id="theme-toggle" class="btn btn-secondary btn-icon">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button id="settings-btn" class="btn btn-secondary btn-icon">
+                    <i class="fas fa-cog"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1>Create Your World</h1>
+                <p>Build your own scenario step by step with AI assistance. Each field has a magic wand button (<i class="fas fa-magic"></i>) to generate content automatically.</p>
+            </div>
+
+            <div class="guided-scenario-container">
+                <!-- Step 1: World Size Selection -->
+                <div id="step-1" class="scenario-step active">
+                    <h2><span class="step-number">1</span>Choose Your World Size</h2>
+                    <p>Choose the scope and complexity of your world</p>
+                    
+                    <div class="world-size-options">
+                        <div class="world-size-option" data-size="small">
+                            <input type="radio" name="world-size" id="size-small" value="small">
+                            <label for="size-small">
+                                <h3>Small World</h3>
+                                <p>A confined setting with 3-5 locations and 2-4 NPCs.</p>
+                                <ul>
+                                    <li>Perfect for a single session</li>
+                                    <li>Focused storyline</li>
+                                    <li>Less preparation required</li>
+                                </ul>
+                                <div class="size-example">Example: A haunted mansion, a small village, a spaceship</div>
+                            </label>
+                        </div>
+                        
+                        <div class="world-size-option" data-size="medium">
+                            <input type="radio" name="world-size" id="size-medium" value="medium">
+                            <label for="size-medium">
+                                <h3>Medium World</h3>
+                                <p>A larger setting with 6-10 locations and 4-8 NPCs.</p>
+                                <ul>
+                                    <li>Multiple session possibilities</li>
+                                    <li>More detailed history and conflicts</li>
+                                    <li>Moderate complexity</li>
+                                </ul>
+                                <div class="size-example">Example: A small city district, an island, a dungeon complex</div>
+                            </label>
+                        </div>
+                        
+                        <div class="world-size-option" data-size="large">
+                            <input type="radio" name="world-size" id="size-large" value="large">
+                            <label for="size-large">
+                                <h3>Large World</h3>
+                                <p>A comprehensive setting with 10+ locations and 8+ NPCs.</p>
+                                <ul>
+                                    <li>Campaign-worthy complexity</li>
+                                    <li>Rich history, politics, and geography</li>
+                                    <li>Detailed economic and social structures</li>
+                                </ul>
+                                <div class="size-example">Example: A kingdom, a sprawling city, a region with multiple settlements</div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="step-navigation">
+                        <button class="btn btn-secondary" id="back-to-home">Cancel</button>
+                        <button class="btn btn-primary" id="next-to-step-2">Continue</button>
+                    </div>
+                </div>
+
+                <!-- Step 2: Primary Prompt -->
+                <div id="step-2" class="scenario-step">
+                    <h2>Step 2: Describe Your World</h2>
+                    <p>Provide a high-level description of the scenario you want to create</p>
+
+                    <div class="primary-prompt-container">
+                        <label for="primary-prompt">Overall Description:</label>
+                        <textarea id="primary-prompt" rows="6" placeholder="Describe the world you want to create. Include the general theme, setting, time period, and any key elements you want to include..."></textarea>
+                        
+                        <div class="genre-tags-container">
+                            <label>Select Genre Tags (optional):</label>
+                            <div class="genre-tags">
+                                <span class="genre-tag" data-genre="fantasy">Fantasy</span>
+                                <span class="genre-tag" data-genre="sci-fi">Sci-Fi</span>
+                                <span class="genre-tag" data-genre="horror">Horror</span>
+                                <span class="genre-tag" data-genre="mystery">Mystery</span>
+                                <span class="genre-tag" data-genre="historical">Historical</span>
+                                <span class="genre-tag" data-genre="contemporary">Contemporary</span>
+                                <span class="genre-tag" data-genre="post-apocalyptic">Post-Apocalyptic</span>
+                                <span class="genre-tag" data-genre="cyberpunk">Cyberpunk</span>
+                                <span class="genre-tag" data-genre="steampunk">Steampunk</span>
+                                <span class="genre-tag" data-genre="western">Western</span>
+                                <span class="genre-tag" data-genre="comedy">Comedy</span>
+                                <span class="genre-tag" data-genre="drama">Drama</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-navigation">
+                        <button class="btn btn-secondary" id="back-to-step-1">Back</button>
+                        <button class="btn btn-primary" id="next-to-step-3">Continue</button>
+                    </div>
+                </div>
+
+                <!-- Step 3: World Details Form -->
+                <div id="step-3" class="scenario-step">
+                    <h2>Step 3: World Details</h2>
+                    <p>Fill in the details of your world or use the AI to generate content</p>
+                    
+                    <div class="scenario-form-container">
+                        <form id="scenario-form">
+                            <!-- Basic Information Section -->
+                            <div class="form-section">
+                                <h3>Basic Information</h3>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="scenario-title">Title</label>
+                                        <div class="input-with-generate">
+                                            <input type="text" id="scenario-title" name="title">
+                                            <button type="button" class="generate-btn" data-field="title">
+                                                <i class="fas fa-magic"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="scenario-description">Short Description</label>
+                                        <div class="input-with-generate">
+                                            <input type="text" id="scenario-description" name="description">
+                                            <button type="button" class="generate-btn" data-field="description">
+                                                <i class="fas fa-magic"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="scenario-starting-location">Starting Location</label>
+                                        <div class="input-with-generate">
+                                            <input type="text" id="scenario-starting-location" name="starting_location">
+                                            <button type="button" class="generate-btn" data-field="starting_location">
+                                                <i class="fas fa-magic"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="scenario-world-rules">Special World Rules</label>
+                                        <div class="input-with-generate">
+                                            <textarea id="scenario-world-rules" name="world_rules" rows="2"></textarea>
+                                            <button type="button" class="generate-btn" data-field="world_rules">
+                                                <i class="fas fa-magic"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- History Section - Medium and Large worlds -->
+                            <div class="form-section" id="history-section">
+                                <h3>History</h3>
+                                <div class="form-row">
+                                    <div class="form-group full-width">
+                                        <label for="scenario-history">World History</label>
+                                        <div class="input-with-generate">
+                                            <textarea id="scenario-history" name="history" rows="4"></textarea>
+                                            <button type="button" class="generate-btn" data-field="history">
+                                                <i class="fas fa-magic"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Conflicts Section - Medium and Large worlds -->
+                            <div class="form-section" id="conflicts-section">
+                                <h3>Conflicts</h3>
+                                <div class="conflicts-container">
+                                    <div class="entity-cards" id="conflicts-list">
+                                        <!-- Conflict cards will be added here -->
+                                    </div>
+                                    <button type="button" class="btn btn-secondary" id="add-conflict">
+                                        <i class="fas fa-plus"></i> Add Conflict
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" id="generate-conflicts">
+                                        <i class="fas fa-magic"></i> Generate Conflicts
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Political Structure - Large worlds only -->
+                            <div class="form-section" id="politics-section">
+                                <h3>Political Structure</h3>
+                                <div class="form-row">
+                                    <div class="form-group full-width">
+                                        <label for="scenario-politics">Political System</label>
+                                        <div class="input-with-generate">
+                                            <textarea id="scenario-politics" name="political_structure" rows="3"></textarea>
+                                            <button type="button" class="generate-btn" data-field="political_structure">
+                                                <i class="fas fa-magic"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Geography - Large worlds only -->
+                            <div class="form-section" id="geography-section">
+                                <h3>Geography</h3>
+                                <div class="form-row">
+                                    <div class="form-group full-width">
+                                        <label for="scenario-geography">Geographic Features</label>
+                                        <div class="input-with-generate">
+                                            <textarea id="scenario-geography" name="geography" rows="3"></textarea>
+                                            <button type="button" class="generate-btn" data-field="geography">
+                                                <i class="fas fa-magic"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Economy - Large worlds only -->
+                            <div class="form-section" id="economy-section">
+                                <h3>Economy</h3>
+                                <div class="form-row">
+                                    <div class="form-group full-width">
+                                        <label for="scenario-economy">Economic System</label>
+                                        <div class="input-with-generate">
+                                            <textarea id="scenario-economy" name="economy" rows="3"></textarea>
+                                            <button type="button" class="generate-btn" data-field="economy">
+                                                <i class="fas fa-magic"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Locations Section -->
+                            <div class="form-section">
+                                <h3>Locations</h3>
+                                <div class="locations-container">
+                                    <div class="entity-cards" id="locations-list">
+                                        <!-- Location cards will be added here -->
+                                    </div>
+                                    <button type="button" class="btn btn-secondary" id="add-location">
+                                        <i class="fas fa-plus"></i> Add Location
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" id="generate-locations">
+                                        <i class="fas fa-magic"></i> Generate Locations
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- NPCs Section -->
+                            <div class="form-section">
+                                <h3>NPCs</h3>
+                                <div class="npcs-container">
+                                    <div class="entity-cards" id="npcs-list">
+                                        <!-- NPC cards will be added here -->
+                                    </div>
+                                    <button type="button" class="btn btn-secondary" id="add-npc">
+                                        <i class="fas fa-plus"></i> Add NPC
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" id="generate-npcs">
+                                        <i class="fas fa-magic"></i> Generate NPCs
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="step-navigation">
+                        <button class="btn btn-secondary" id="back-to-step-2">Back</button>
+                        <button class="btn btn-primary" id="generate-all">Generate All from Primary Prompt</button>
+                        <button class="btn btn-primary" id="save-scenario">Save Scenario</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for adding/editing entities (Locations, NPCs, Conflicts) -->
+    <div class="modal" id="entity-modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 id="entity-modal-title">Add New Entity</h2>
+            
+            <form id="entity-form">
+                <input type="hidden" id="entity-type">
+                <input type="hidden" id="entity-index">
+                
+                <div class="form-group">
+                    <label for="entity-name">Name</label>
+                    <input type="text" id="entity-name" required>
+                </div>
+                
+                <div class="form-group" id="location-specific-fields">
+                    <label for="entity-description">Description</label>
+                    <textarea id="entity-description" rows="3" required></textarea>
+                </div>
+                
+                <div class="form-group" id="npc-specific-fields">
+                    <label for="entity-role">Role</label>
+                    <input type="text" id="entity-role">
+                    
+                    <label for="entity-location">Location</label>
+                    <select id="entity-location"></select>
+                    
+                    <label for="entity-personality">Personality</label>
+                    <textarea id="entity-personality" rows="2"></textarea>
+                </div>
+                
+                <div class="form-group" id="conflict-specific-fields">
+                    <label for="entity-parties">Parties Involved</label>
+                    <input type="text" id="entity-parties">
+                    
+                    <label for="entity-stakes">Stakes</label>
+                    <textarea id="entity-stakes" rows="2"></textarea>
+                </div>
+                
+                <div class="form-group form-buttons">
+                    <button type="button" id="generate-entity-content" class="btn btn-secondary">
+                        <i class="fas fa-magic"></i> Generate Content
+                    </button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Loader overlay for generation -->
+    <div id="loader-overlay" class="hidden">
+        <div class="loader"></div>
+        <p id="loader-message">Generating content...</p>
+    </div>
+    
+    <script src="/static/js/common.js"></script>
+    <script src="/static/js/guided-scenario.js"></script>
+</body>
+</html> 

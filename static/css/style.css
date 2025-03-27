@@ -1,0 +1,2399 @@
+/* =========================================================
+   MODULE 1: CSS VARIABLES AND THEMING
+   ========================================================= */
+/* This module contains CSS variables for theming and color schemes */
+
+:root {
+    --primary-color: #4f46e5;
+    --primary-color-rgb: 79, 70, 229;
+    --primary-light: #6366f1;
+    --primary-dark: #4338ca;
+    --secondary-color: #f97316;
+    --light-color: #f8fafc;
+    --dark-color: #1e293b;
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+    --danger-color: #ef4444;
+    --info-color: #3b82f6;
+    --text-color: #1e293b;
+    --text-light: #64748b;
+    --background-color: #f8fafc;
+    --background-alt: #f1f5f9;
+    --card-color: #ffffff;
+    --border-color: #e2e8f0;
+    
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    
+    --transition-speed: 0.3s;
+    --border-radius: 0.5rem;
+    --font-family: 'Inter', sans-serif;
+
+    /* Light mode specific variables for better homepage visibility */
+    --homepage-bg: #ffffff;
+    --homepage-text: #1e293b;
+    --homepage-border: #e2e8f0;
+    --homepage-card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --homepage-card-bg: #ffffff;
+    --homepage-card-hover: #f8fafc;
+    --homepage-hero-bg: linear-gradient(135deg, #4f46e5, #6366f1);
+    --homepage-hero-text: #ffffff;
+    
+    /* Light mode cinematic variables */
+    --cinematic-light-bg: #f1f5f9;
+    --cinematic-light-text: #1e293b;
+    --cinematic-light-message-bg: #ffffff;
+    --cinematic-light-scene-bg: rgba(255, 255, 255, 0.9);
+    --cinematic-light-scene-text: #1e293b;
+    --cinematic-light-border: rgba(0, 0, 0, 0.1);
+}
+
+.dark-mode {
+    --primary-color: #6366f1;
+    --primary-color-rgb: 99, 102, 241;
+    --primary-light: #818cf8;
+    --primary-dark: #4f46e5;
+    --secondary-color: #fb923c;
+    --text-color: #f1f5f9;
+    --text-light: #94a3b8;
+    --background-color: #0f172a;
+    --background-alt: #1e293b;
+    --card-color: #1e293b;
+    --border-color: #334155;
+    
+    /* Dark mode homepage variables */
+    --homepage-bg: #0f172a;
+    --homepage-text: #f1f5f9;
+    --homepage-border: #334155;
+    --homepage-card-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    --homepage-card-bg: #1e293b;
+    --homepage-card-hover: #2d3748;
+    --homepage-hero-bg: linear-gradient(135deg, #4f46e5, #6366f1);
+    --homepage-hero-text: #ffffff;
+    
+    /* Dark mode cinematic variables */
+    --cinematic-light-bg: #0f172a;
+    --cinematic-light-text: #f1f5f9;
+    --cinematic-light-message-bg: rgba(30, 41, 59, 0.8);
+    --cinematic-light-scene-bg: rgba(30, 41, 59, 0.8);
+    --cinematic-light-scene-text: #f1f5f9;
+    --cinematic-light-border: rgba(255, 255, 255, 0.2);
+}
+
+/* =========================================================
+   MODULE 2: BASE STYLES AND LAYOUT
+   ========================================================= */
+/* This module contains base styles, reset, and main layout */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family);
+    color: var(--text-color);
+    background-color: var(--background-color);
+    line-height: 1.5;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+button {
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Layout */
+.app-container {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    grid-template-rows: auto 1fr;
+    height: 100vh;
+}
+
+.app-header {
+    grid-column: 1 / 3;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background-color: var(--card-color);
+    box-shadow: var(--shadow);
+    border-bottom: 1px solid var(--border-color);
+    z-index: 10;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+}
+
+.logo i {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+}
+
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* =========================================================
+   MODULE 3: SIDEBAR AND CHARACTER LIST
+   ========================================================= */
+/* This module contains styles for the sidebar and character list */
+
+/* Sidebar */
+.sidebar {
+    grid-column: 1;
+    grid-row: 2;
+    background-color: var(--card-color);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.sidebar-header {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sidebar-header h2 {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.sidebar-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.5rem;
+}
+
+.sidebar-footer {
+    padding: 1rem;
+    border-top: 1px solid var(--border-color);
+}
+
+/* Character List */
+.character-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.character-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: background-color var(--transition-speed);
+}
+
+.character-item:hover {
+    background-color: var(--background-color);
+}
+
+.character-item.active {
+    background-color: var(--primary-light);
+    color: white;
+}
+
+.character-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--primary-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+}
+
+.character-item.active .character-avatar {
+    background-color: white;
+    color: var(--primary-color);
+}
+
+.character-meta {
+    flex: 1;
+    overflow: hidden;
+}
+
+.character-name {
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.character-summary {
+    font-size: 0.75rem;
+    color: var(--text-light);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.character-item.active .character-summary {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* =========================================================
+   MODULE 4: MAIN CONTENT AND WELCOME SCREEN
+   ========================================================= */
+/* This module contains styles for the main content area and welcome screen */
+
+/* Main Content */
+.main-content {
+    grid-column: 2;
+    grid-row: 2;
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 60px); /* Adjust for header height */
+    position: relative;
+    overflow: hidden;
+}
+
+/* Welcome Screen */
+.welcome-screen {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
+}
+
+.welcome-logo {
+    font-size: 4rem;
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+}
+
+.welcome-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.welcome-text {
+    max-width: 600px;
+    margin-bottom: 2rem;
+    color: var(--text-light);
+}
+
+.get-started-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    font-size: 1rem;
+    transition: background-color var(--transition-speed);
+}
+
+.get-started-btn:hover {
+    background-color: var(--primary-dark);
+}
+
+/* =========================================================
+   MODULE 5: BUTTONS AND COMMON UI ELEMENTS
+   ========================================================= */
+/* This module contains styles for buttons and common UI elements */
+
+/* Buttons */
+.btn {
+    padding: 0.6rem 1.2rem;
+    border-radius: var(--border-radius);
+    font-weight: 500;
+    font-size: 0.95rem;
+    border: none;
+    transition: all var(--transition-speed);
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-dark);
+}
+
+.btn-secondary {
+    background-color: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+}
+
+.btn-secondary:hover {
+    background-color: var(--background-color);
+}
+
+.btn-icon {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-sm {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+}
+
+/* Badges */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.5rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.badge-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.badge-neutral {
+    background-color: var(--text-light);
+    color: white;
+}
+
+.badge-success {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.badge-warning {
+    background-color: var(--warning-color);
+    color: white;
+}
+
+.badge-danger {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+/* Loading */
+.loading-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1001;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: var(--primary-color);
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* =========================================================
+   MODULE 6: CHAT INTERFACE AND MESSAGES
+   ========================================================= */
+/* This module contains styles for the chat interface and message bubbles */
+
+/* Chat interface structure */
+.chat-interface {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    position: relative;
+    /* Add bottom padding to prevent content from being hidden behind the fixed input */
+    padding-bottom: 180px; /* Adjust based on your input container height */
+    overflow: hidden;
+}
+
+.chat-header {
+    background-color: var(--card-color);
+    border-bottom: 1px solid var(--border-color);
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    z-index: 10;
+    position: sticky;
+    top: 0;
+}
+
+/* Fixed chat messages container styling */
+.chat-messages {
+    flex: 1;
+    overflow-y: auto !important; /* Force scrolling */
+    padding: 15px;
+    scroll-behavior: smooth;
+    height: calc(100vh - 200px); /* Adjust height calculation */
+    max-height: calc(100vh - 200px);
+    margin-bottom: 140px; /* Space for input container */
+}
+
+/* Chat scrollbar styling */
+.chat-messages::-webkit-scrollbar {
+    width: 8px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+    background: var(--background-color);
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+    background-color: var(--border-color);
+    border-radius: 4px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb:hover {
+    background-color: var(--text-light);
+}
+
+/* Fixed chat controls container at the bottom */
+.chat-controls-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--background-color);
+    border-top: 1px solid var(--border-color);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+/* Chat input area styling */
+.chat-input-container {
+    padding: 10px 15px;
+    background-color: var(--background-color);
+    z-index: 10;
+}
+
+.chat-input-wrapper {
+    display: flex;
+    align-items: flex-end;
+    background-color: var(--card-color);
+    border-radius: 8px;
+    padding: 8px 12px;
+    position: relative;
+}
+
+.chat-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    resize: none;
+    max-height: 150px;
+    padding-right: 40px;
+    font-family: inherit;
+    color: var(--text-color);
+}
+
+.chat-input:focus {
+    outline: none;
+}
+
+.send-btn {
+    position: absolute;
+    right: 10px;
+    bottom: 8px;
+    background: none;
+    border: none;
+    color: var(--primary-color);
+    cursor: pointer;
+    font-size: 1.2em;
+    transition: transform 0.2s;
+}
+
+.send-btn:hover {
+    transform: scale(1.1);
+}
+
+/* Chat message styling */
+.message {
+    display: flex;
+    margin-bottom: 20px;
+    max-width: 85%;
+}
+
+.message-user {
+    margin-left: auto;
+}
+
+.message-character {
+    margin-right: auto;
+}
+
+.message-bubble {
+    background-color: var(--card-color);
+    border-radius: 18px;
+    padding: 12px 16px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.message-user .message-bubble {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.message-text {
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.message-metadata {
+    font-size: 0.75rem;
+    color: var(--text-light);
+    margin-top: 5px;
+    text-align: right;
+}
+
+.message-user .message-metadata {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.message-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--card-color);
+    margin-right: 8px;
+}
+
+.message-user .message-avatar {
+    margin-right: 0;
+    margin-left: 8px;
+    background-color: var(--primary-color);
+    color: white;
+}
+
+/* Input mode toggle styling */
+.input-mode-toggle {
+    display: flex;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 10px;
+    border: 1px solid var(--border-color);
+    width: fit-content;
+}
+
+.toggle-option {
+    padding: 6px 12px;
+    cursor: pointer;
+    background-color: var(--card-color);
+    transition: all 0.2s;
+}
+
+.toggle-option.active {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.input-mode-indicator {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    background-color: var(--background-color);
+    border-radius: 20px;
+    margin-right: 8px;
+    font-size: 0.85rem;
+    border: 1px solid var(--border-color);
+}
+
+.input-mode-indicator.act-mode {
+    background-color: var(--warning-color);
+    color: white;
+    border-color: var(--warning-color);
+}
+
+/* Action resolution settings */
+.action-resolution-settings {
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+    background-color: var(--background-color);
+    border-radius: var(--border-radius);
+    display: none;
+    animation: fade-in 0.3s ease;
+}
+
+.action-resolution-settings.visible {
+    display: block;
+}
+
+/* Action result styling */
+.action-result {
+    margin: 0 15px 10px;
+    background-color: var(--card-color);
+    border-radius: 8px;
+    padding: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--border-color);
+}
+
+.result-icon {
+    font-size: 1.5rem;
+    margin-right: 10px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.result-content {
+    flex: 1;
+}
+
+.result-title {
+    font-weight: bold;
+    margin-bottom: 2px;
+}
+
+.result-value.success {
+    color: var(--success-color);
+}
+
+.result-value.failure {
+    color: var(--danger-color);
+}
+
+/* Chat toolbar */
+.chat-toolbar {
+    display: flex;
+    margin-right: 8px;
+}
+
+.toolbar-btn {
+    background: none;
+    border: none;
+    color: var(--text-light);
+    padding: 5px;
+    margin-right: 3px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.toolbar-btn:hover {
+    background-color: var(--background-color);
+    color: var(--primary-color);
+}
+
+/* Player action messaging */
+.action-attempt {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.message-action {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.message-action.message-success {
+    color: var(--success-color);
+}
+
+.message-action.message-failure {
+    color: var(--danger-color);
+}
+
+/* Animation for dice rolling */
+.dice-rolling {
+    animation: dice-roll 1s ease-in-out;
+}
+
+@keyframes dice-roll {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(90deg); }
+    50% { transform: rotate(180deg); }
+    75% { transform: rotate(270deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Scene descriptions */
+.scene-description {
+    margin: 15px 0;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.scene-toggle {
+    padding: 10px 15px;
+    background-color: var(--background-alt);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.scene-toggle.active i {
+    transform: rotate(180deg);
+}
+
+.scene-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s;
+}
+
+.scene-content.active {
+    max-height: 500px;
+    padding: 15px;
+}
+
+/* Enhanced Message Styling */
+.message-character.with-scene {
+    margin-bottom: 0.25rem;
+}
+
+.message-character.with-scene .message-bubble {
+    position: relative;
+}
+
+.message-character.with-scene .message-bubble::after {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: 20px;
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid var(--card-color);
+    z-index: 1;
+}
+
+/* =========================================================
+   MODULE 7: MODALS AND OVERLAYS
+   ========================================================= */
+/* This module contains styles for modals, overlays, and popup components */
+
+/* Modals */
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-backdrop.hidden {
+    display: none;
+}
+
+.modal {
+    background-color: var(--card-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-md);
+    width: 100%;
+    max-width: 600px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.modal-wide {
+    max-width: 900px;
+}
+
+.modal-header {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-title {
+    font-weight: 600;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--text-light);
+    cursor: pointer;
+}
+
+.modal-body {
+    padding: 1rem;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.modal-footer {
+    padding: 1rem;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+}
+
+/* Chat Options Menu */
+.chat-options-menu {
+    position: absolute;
+    right: 20px;
+    top: 100px;
+    background-color: var(--card-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    z-index: 100;
+}
+
+.chat-options-container {
+    padding: 0.5rem;
+}
+
+.chat-option-item {
+    padding: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.chat-option-item:hover {
+    background-color: var(--background-color);
+}
+
+.chat-option-item i {
+    margin-right: 0.5rem;
+}
+
+/* =========================================================
+   MODULE 8: TABS AND FORM ELEMENTS
+   ========================================================= */
+/* This module contains styles for tabs and form elements */
+
+/* Tabs */
+.tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.tab {
+    padding: 0.75rem 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+}
+
+.tab.active {
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+}
+
+.tab-content {
+    padding: 1rem 0;
+}
+
+/* Inner tabs for prompt editor */
+.tabs-inner {
+    display: flex;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 1rem;
+}
+
+.tabs-inner .tab {
+    padding: 0.5rem 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    font-size: 0.9rem;
+}
+
+.tabs-inner .tab.active {
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+}
+
+.tab-inner-content {
+    display: none;
+}
+
+.tab-inner-content.active {
+    display: block;
+}
+
+.tab-inner-content.hidden.active {
+    display: block !important;
+}
+
+/* Forms */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group.col-span-2 {
+    grid-column: span 2;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.form-input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.375rem;
+    background-color: var(--card-color);
+    color: var(--text-color);
+    font-family: inherit;
+    font-size: 0.95rem;
+}
+
+.form-input:focus {
+    outline: 2px solid var(--primary-light);
+    border-color: transparent;
+}
+
+textarea.form-input {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.form-hint {
+    font-size: 0.8rem;
+    color: var(--text-light);
+    margin-top: 0.25rem;
+}
+
+/* Toggle Switch */
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 48px;
+    height: 24px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--text-light);
+    transition: 0.4s;
+    border-radius: 24px;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+    background-color: var(--primary-color);
+}
+
+input:checked + .toggle-slider:before {
+    transform: translateX(24px);
+}
+
+.form-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* =========================================================
+   MODULE 9: CHARACTER CREATION AND STATS
+   ========================================================= */
+/* This module contains styles for character creation, AI generation, and stats */
+
+/* Character creation area */
+.character-creation-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.character-tabs-content {
+    padding: 1rem 0;
+}
+
+.ai-generator {
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    background-color: var(--background-color);
+}
+
+.ai-generator-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.ai-generator-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+/* Player Stats Panel */
+.player-stats-panel {
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background-color: var(--card-color);
+    background-image: linear-gradient(to bottom, var(--card-color), var(--background-color));
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+.stats-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.stats-header h3 {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgba(255,255,255,0.1);
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    border: 1px solid var(--border-color);
+}
+
+.stat-item label {
+    font-size: 0.8rem;
+    color: var(--text-light);
+}
+
+.stat-value {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    padding: 0.25rem 0.5rem;
+    background-color: rgba(var(--primary-color-rgb), 0.1);
+    border-radius: 0.25rem;
+    min-width: 2.5rem;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+}
+
+body.dark-mode .player-stats-panel {
+    background-image: linear-gradient(to bottom, var(--card-color), rgba(0,0,0,0.2));
+}
+
+/* Stats Edit Modal */
+.stats-edit-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+#stats-modal .form-input[type="number"] {
+    width: 100%;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+#stats-modal .form-label {
+    text-align: center;
+    display: block;
+}
+
+/* =========================================================
+   MODULE 10: VIEW OPTIONS AND SCENE DESCRIPTIONS
+   ========================================================= */
+/* This module contains styles for view options and scene descriptions */
+
+/* View Options */
+.view-options {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 0.5rem 0;
+    padding: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+    background-color: var(--card-color);
+}
+
+.view-option {
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.view-option:hover {
+    background-color: var(--background-color);
+}
+
+.view-option.active {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+/* Location and Action Bar */
+.location-action-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.8rem;
+    color: var(--text-light);
+    margin-bottom: 0.5rem;
+}
+
+.location-indicator, 
+.action-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.location-indicator i {
+    color: var(--secondary-color);
+}
+
+.action-indicator i {
+    color: var(--primary-color);
+}
+
+/* Scene Description - redefining for clarity */
+.scene-description {
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    margin: 0.75rem 0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.scene-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: var(--text-color);
+    background-color: var(--card-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.scene-toggle:hover {
+    background-color: var(--background-color);
+}
+
+.scene-toggle i {
+    transition: transform 0.3s ease;
+}
+
+.scene-toggle.active i {
+    transform: rotate(180deg);
+}
+
+.scene-content {
+    padding: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.scene-content.active {
+    padding: 1rem;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.scene-content p {
+    line-height: 1.6;
+    margin: 0;
+    font-style: italic;
+    color: var(--text-color);
+}
+
+/* Custom scroll for scene content */
+.scene-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.scene-content::-webkit-scrollbar-track {
+    background: var(--background-color);
+}
+
+.scene-content::-webkit-scrollbar-thumb {
+    background-color: var(--text-light);
+    border-radius: 3px;
+}
+
+/* =========================================================
+   MODULE 11: PLAYER ACTION SYSTEM
+   ========================================================= */
+/* This module contains styles for the player action system */
+
+/* Input Mode Toggle */
+.input-mode-toggle {
+    display: flex;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+    position: relative;
+}
+
+.toggle-option {
+    padding: 0.5rem 1rem;
+    flex: 1;
+    text-align: center;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    background-color: var(--card-color);
+    color: var(--text-color);
+    z-index: 1;
+    user-select: none;
+}
+
+.toggle-option.active {
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: 500;
+}
+
+/* Adding more distinct visual feedback */
+.toggle-option:hover:not(.active) {
+    background-color: var(--background-color);
+}
+
+.toggle-option:active {
+    transform: scale(0.98);
+}
+
+.toggle-option i {
+    margin-right: 0.25rem;
+}
+
+/* Action Resolution Settings */
+.action-resolution-settings {
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+    background-color: var(--background-color);
+    border-radius: var(--border-radius);
+    display: none;
+    animation: fade-in 0.3s ease;
+}
+
+.action-resolution-settings.visible {
+    display: block;
+}
+
+.action-resolution-settings label {
+    font-size: 0.85rem;
+    margin-right: 0.5rem;
+}
+
+.action-resolution-settings select {
+    width: auto;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.85rem;
+}
+
+/* Player Stats Panel - animation */
+.player-stats-panel {
+    animation: slide-down 0.4s ease;
+}
+
+@keyframes slide-down {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Action Messages */
+.message-action {
+    background-color: var(--secondary-color);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    margin-bottom: 0.25rem;
+    font-style: italic;
+    font-size: 0.9rem;
+}
+
+.message-success {
+    background-color: var(--success-color);
+}
+
+.message-failure {
+    background-color: var(--danger-color);
+}
+
+/* Action Result Display */
+.action-result {
+    position: fixed;
+    bottom: 100px;
+    right: 20px;
+    background-color: var(--card-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    box-shadow: var(--shadow-md);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.3s ease;
+    z-index: 100;
+    animation: slide-in-right 0.5s ease;
+}
+
+@keyframes slide-in-right {
+    from { transform: translateX(120%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+.action-result.hidden {
+    transform: translateX(120%);
+    opacity: 0;
+}
+
+.result-icon {
+    font-size: 2rem;
+    color: var(--primary-color);
+}
+
+.result-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.result-title {
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.result-value {
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.result-value.success {
+    color: var(--success-color);
+}
+
+.result-value.failure {
+    color: var(--danger-color);
+}
+
+.result-details {
+    font-size: 0.8rem;
+    color: var(--text-light);
+}
+
+/* Attempt Action Bubble */
+.message-bubble.action-attempt {
+    background-color: var(--secondary-color);
+    color: white;
+    font-style: italic;
+}
+
+.message-bubble.action-attempt .message-metadata {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Action Success/Failure Indicators */
+.action-outcome {
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    border-radius: 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-left: 0.5rem;
+}
+
+.action-outcome.success {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.action-outcome.failure {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+/* Player Input Placeholders */
+.chat-input.act-mode::placeholder {
+    color: var(--secondary-color);
+}
+
+/* Quick toggle button enhancement */
+.toggle-action-mode {
+    position: relative;
+}
+
+.toggle-action-mode:after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+body.act-mode .toggle-action-mode:after {
+    background-color: var(--secondary-color);
+}
+
+body.speak-mode .toggle-action-mode:after {
+    background-color: var(--primary-color);
+}
+
+/* =========================================================
+   MODULE 12: DISPLAY MODES
+   ========================================================= */
+/* This module contains styles for different display modes */
+
+/* Display Modes */
+body.simple-mode .scene-description,
+body.simple-mode .location-action-bar {
+    display: none;
+}
+
+body.novel-mode .scene-description {
+    display: block;
+}
+
+body.novel-mode .scene-content {
+    padding: 1rem;
+    max-height: none;
+}
+
+body.cinematic-mode {
+    background-color: var(--cinematic-light-bg);
+    color: var(--cinematic-light-text);
+}
+
+body.cinematic-mode .chat-interface {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: var(--cinematic-light-bg);
+    padding: 1rem;
+    border-radius: 1rem;
+}
+
+body.cinematic-mode .chat-messages {
+    padding: 2rem;
+    background-color: var(--cinematic-light-bg);
+}
+
+body.cinematic-mode .scene-description {
+    background-color: var(--cinematic-light-scene-bg);
+    border: 1px solid var(--cinematic-light-border);
+    border-radius: 0.75rem;
+    margin: 1.5rem 0;
+    box-shadow: var(--shadow-md);
+}
+
+body.cinematic-mode .scene-toggle {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 0.5rem 0.5rem 0 0;
+}
+
+body.cinematic-mode .scene-content {
+    padding: 1.5rem;
+    max-height: none;
+    color: var(--cinematic-light-scene-text);
+}
+
+body.cinematic-mode .scene-content.active {
+    padding: 1.5rem;
+}
+
+body.cinematic-mode .scene-content p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--cinematic-light-scene-text);
+}
+
+body.cinematic-mode .message-bubble {
+    background-color: var(--cinematic-light-message-bg);
+    border: 1px solid var(--cinematic-light-border);
+    box-shadow: var(--shadow);
+}
+
+body.cinematic-mode .message-text {
+    color: var(--cinematic-light-text);
+}
+
+body.cinematic-mode .message-user .message-bubble {
+    background-color: var(--primary-light);
+    color: white;
+}
+
+body.cinematic-mode .message-user .message-text {
+    color: white;
+}
+
+body.cinematic-mode .location-action-bar {
+    background-color: var(--primary-color);
+    padding: 0.75rem 1.25rem;
+    border-radius: 1rem;
+    margin-bottom: 1rem;
+    color: white;
+    box-shadow: var(--shadow);
+}
+
+/* Dark mode specific adjustments for cinematic mode */
+body.dark-mode.cinematic-mode {
+    background-color: var(--dark-color);
+}
+
+body.dark-mode.cinematic-mode .scene-description {
+    background-color: rgba(30, 41, 59, 0.8);
+    border: none;
+}
+
+body.dark-mode.cinematic-mode .message-bubble {
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+body.dark-mode.cinematic-mode .scene-content p,
+body.dark-mode.cinematic-mode .message-text {
+    color: var(--light-color);
+}
+
+body.dark-mode.cinematic-mode .location-action-bar {
+    background-color: rgba(0, 0, 0, 0.3);
+    color: var(--light-color);
+}
+
+/* =========================================================
+   MODULE 13: UTILITIES AND HELPERS
+   ========================================================= */
+/* This module contains utility classes for layout and formatting */
+
+/* Text utilities */
+.text-center {
+    text-align: center;
+}
+
+.text-lg {
+    font-size: 1.125rem;
+}
+
+.text-sm {
+    font-size: 0.875rem;
+}
+
+.whitespace-pre-wrap {
+    white-space: pre-wrap;
+}
+
+/* Spacing utilities */
+.mt-2 {
+    margin-top: 0.5rem;
+}
+
+.mt-4 {
+    margin-top: 1rem;
+}
+
+.mb-4 {
+    margin-bottom: 1rem;
+}
+
+.p-3 {
+    padding: 0.75rem;
+}
+
+/* Flexbox */
+.flex {
+    display: flex;
+}
+
+.gap-2 {
+    gap: 0.5rem;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.items-center {
+    align-items: center;
+}
+
+/* Border utilities */
+.rounded {
+    border-radius: var(--border-radius);
+}
+
+.border {
+    border: 1px solid var(--border-color);
+}
+
+/* Background utilities */
+.bg-background-color {
+    background-color: var(--background-color);
+}
+
+/* =========================================================
+   MODULE 14: RESPONSIVE DESIGN
+   ========================================================= */
+/* This module contains responsive styles for different screen sizes */
+
+/* Responsive */
+@media (max-width: 768px) {
+    .app-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .sidebar {
+        display: none;
+    }
+    
+    .sidebar.active {
+        display: block;
+        position: fixed;
+        top: 60px;
+        left: 0;
+        bottom: 0;
+        width: 250px;
+        z-index: 100;
+    }
+    
+    .app-header {
+        grid-column: 1;
+    }
+    
+    .main-content {
+        grid-column: 1;
+    }
+    
+    .message {
+        max-width: 90%;
+    }
+    
+    .character-creation-container {
+        flex-direction: column;
+    }
+    
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-group.col-span-2 {
+        grid-column: span 1;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .stats-edit-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .action-result {
+        left: 20px;
+        right: 20px;
+        bottom: 80px;
+    }
+    
+    .input-mode-toggle {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+    }
+    
+    .view-options {
+        overflow-x: auto;
+        justify-content: flex-start;
+        padding: 0.5rem;
+    }
+    
+    body.cinematic-mode .scene-content p {
+        font-size: 1rem;
+    }
+    
+    .message-action-btn {
+        opacity: 0.5; /* Always show buttons on mobile, but slightly transparent */
+    }
+    
+    .copy-button {
+        right: 5px;
+    }
+    
+    .retry-button {
+        right: 25px;
+    }
+    
+    .edit-button {
+        right: 45px;
+    }
+    
+    .scroll-to-bottom-btn {
+        bottom: 120px;
+        right: 15px;
+    }
+}
+
+/* =========================================================
+   MODULE 15: QUALITY OF LIFE FEATURES STYLING
+   ========================================================= */
+/* This module contains styles for quality of life features */
+
+/* Message action buttons styling */
+.message-action-btn {
+    position: absolute;
+    top: 5px;
+    background: none;
+    border: none;
+    color: var(--text-light);
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    font-size: 14px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    z-index: 10;
+}
+
+.message-bubble:hover .message-action-btn {
+    opacity: 0.7;
+}
+
+.message-action-btn:hover {
+    opacity: 1 !important;
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Position buttons */
+.copy-button {
+    right: 5px;
+}
+
+.retry-button {
+    right: 30px;
+}
+
+.edit-button {
+    right: 55px;
+}
+
+/* Badges */
+.regeneration-badge, 
+.edit-badge {
+    font-size: 0.7rem;
+    color: var(--text-light);
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+/* Animation for regenerated/updated messages */
+.regenerated, 
+.updated {
+    animation: highlight-message 2s ease;
+}
+
+/* Edit message interface */
+.edit-container {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.edit-textarea {
+    width: 100%;
+    min-height: 80px;
+    padding: 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    font-family: inherit;
+    font-size: inherit;
+    resize: vertical;
+    background-color: var(--card-color);
+    color: var(--text-color);
+}
+
+.edit-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+    justify-content: flex-end;
+}
+
+.edit-save-btn, 
+.edit-cancel-btn {
+    padding: 5px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.edit-save-btn {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.edit-save-btn:hover {
+    background-color: #0ea271;
+}
+
+.edit-cancel-btn {
+    background-color: var(--text-light);
+    color: white;
+}
+
+.edit-cancel-btn:hover {
+    background-color: #52627a;
+}
+
+/* Loading indicator */
+.qol-loading-indicator {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    z-index: 2000;
+}
+
+.qol-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: qol-spin 1s ease-in-out infinite;
+}
+
+@keyframes qol-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Notifications */
+.qol-notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    color: white;
+    max-width: 300px;
+    z-index: 2000;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    animation: qol-notification-enter 0.3s ease-out;
+}
+
+.qol-notification-info {
+    background-color: var(--info-color);
+}
+
+.qol-notification-success {
+    background-color: var(--success-color);
+}
+
+.qol-notification-warning {
+    background-color: var(--warning-color);
+}
+
+.qol-notification-error {
+    background-color: var(--danger-color);
+}
+
+.qol-notification-hiding {
+    animation: qol-notification-exit 0.3s ease-in forwards;
+}
+
+@keyframes qol-notification-enter {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes qol-notification-exit {
+    from {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+}
+
+/* Scroll to bottom button */
+.scroll-to-bottom-btn {
+    position: fixed;
+    bottom: 180px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.8;
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+.scroll-to-bottom-btn:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.scroll-to-bottom-btn.hidden {
+    display: none;
+}
+
+.scroll-to-bottom-btn.flash {
+    animation: flash-button 1s ease;
+}
+
+@keyframes flash-button {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); background-color: var(--secondary-color); }
+    100% { transform: scale(1); }
+}
+
+/* Export modal specific styles */
+#export-modal .form-toggle {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+#export-modal .toggle-switch {
+    margin-right: 10px;
+}
+
+Copy.template-category-selector {
+    margin-bottom: 1rem;
+}
+
+.template-category-selector select {
+    width: 100%;
+    padding: 0.5rem;
+    font-weight: 500;
+    background-color: var(--card-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    color: var(--text-color);
+}
+
+.template-category {
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background-color: var(--card-color);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    animation: fade-in 0.2s ease;
+}
+
+.tabs-inner {
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    flex-wrap: wrap; /* Allow tabs to wrap if needed */
+    gap: 0.25rem; /* Add spacing between tabs when wrapped */
+}
+
+@keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Chat Instances Styling */
+.chat-instances-list {
+    max-height: 200px;
+    overflow-y: auto;
+ }
+ 
+ .chat-instance-item {
+    display: flex;
+    padding: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-bottom: 4px;
+ }
+ 
+ .location-display-container {
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+ }
+ 
+ /* Add more styling as needed */
+
+ /* Add to style.css */
+
+/* Location display */
+.location-display-container {
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+    padding: 2px 8px;
+    background-color: rgba(var(--primary-color-rgb), 0.1);
+    border-radius: 12px;
+    max-width: fit-content;
+}
+
+.location-icon {
+    margin-right: 5px;
+    color: var(--primary-color);
+}
+
+.location-display {
+    font-size: 0.8rem;
+    margin-right: 5px;
+}
+
+/* Location editor modal */
+.quick-locations-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.location-chip {
+    background-color: var(--background-alt);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.location-chip:hover {
+    background-color: var(--primary-light);
+    color: white;
+    border-color: var(--primary-light);
+}
+
+.generate-location-container {
+    display: flex;
+    gap: 8px;
+}
+
+.generate-location-container input {
+    flex: 1;
+}
+
+/* Chat instances list */
+.sidebar-section {
+    margin-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+}
+
+.sidebar-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px 5px;
+}
+
+.sidebar-section-header h3 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.chat-instances-list {
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 0 5px;
+}
+
+.chat-instance-item {
+    display: flex;
+    padding: 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-bottom: 4px;
+    align-items: center;
+    transition: background-color 0.2s;
+}
+
+.chat-instance-item:hover {
+    background-color: var(--background-color);
+}
+
+.chat-instance-item.active {
+    background-color: var(--primary-light);
+    color: white;
+}
+
+.chat-instance-avatar {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--primary-light);
+    border-radius: 50%;
+    color: white;
+    margin-right: 10px;
+}
+
+.chat-instance-item.active .chat-instance-avatar {
+    background-color: white;
+    color: var(--primary-color);
+}
+
+.chat-instance-meta {
+    flex: 1;
+    overflow: hidden;
+}
+
+.chat-instance-title {
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.9rem;
+}
+
+.chat-instance-details {
+    font-size: 0.7rem;
+    color: var(--text-light);
+}
+
+.chat-instance-item.active .chat-instance-details {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.chat-instance-actions {
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.chat-instance-item:hover .chat-instance-actions {
+    opacity: 1;
+}
+
+.chat-instance-delete-btn {
+    background: none;
+    border: none;
+    color: var(--danger-color);
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50%;
+}
+
+.chat-instance-item.active .chat-instance-delete-btn {
+    color: white;
+}
+
+/* Character selection modal */
+.character-selection-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.character-selection-item {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    border-bottom: 1px solid var(--border-color);
+    transition: background-color 0.2s;
+}
+
+.character-selection-item:hover {
+    background-color: var(--background-alt);
+}
+
+.character-description {
+    color: var(--text-light);
+    font-size: 0.8rem;
+    margin-top: 4px;
+}
+
+/* Add to your style.css file */
+#homepage {
+    z-index: 20; /* Make sure it's above other content when visible */
+    background-color: var(--homepage-bg);
+    color: var(--homepage-text);
+    min-height: 100vh;
+    width: 100%;
+    overflow-y: auto;
+    position: relative;
+}
+
+#homepage.hidden {
+    display: none !important;
+}
+
+#homepage:not(.hidden) {
+    display: block !important;
+}
+
+/* Styling for homepage cards in light mode */
+#homepage .character-card,
+#homepage .scenario-card {
+    background-color: var(--homepage-card-bg);
+    border: 1px solid var(--homepage-border);
+    box-shadow: var(--homepage-card-shadow);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+#homepage .character-card:hover,
+#homepage .scenario-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    background-color: var(--homepage-card-hover);
+}
+
+#homepage .character-card-content,
+#homepage .scenario-content {
+    padding: 1.25rem;
+}
+
+#homepage .character-name,
+#homepage .scenario-name {
+    color: var(--text-color);
+    font-weight: 600;
+}
+
+#homepage .character-description,
+#homepage .scenario-description {
+    color: var(--text-light);
+}
+
+#homepage .hero-section {
+    background-image: var(--homepage-hero-bg);
+    color: var(--homepage-hero-text);
+    padding: 3rem 2rem;
+    text-align: center;
+    border-radius: var(--border-radius);
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow-md);
+}
+
+/* Ensure chat interfaces don't overlap */
+#chat-interface.hidden, #chat-controls.hidden {
+    display: none !important;
+}

@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Character Chat</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <!-- Add the homepage CSS -->
+    <link rel="stylesheet" href="/static/css/homepage.css">
+    <link rel="stylesheet" href="/static/css/scenario-creation.css">
+</head>
+<body>
+    <div class="app-container">
+
+        <!-- =========================================================
+             APP HEADER
+             ========================================================= -->
+        <header class="app-header">
+            <div class="logo" id="home-logo" style="cursor: pointer;">
+                <i class="fas fa-robot"></i>
+                <h1>AI Character Chat</h1>
+            </div>
+            <div class="header-controls">
+                <button id="toggle-theme" class="btn btn-secondary btn-icon">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button id="menu-toggle" class="btn btn-secondary btn-icon md-hide">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <button id="settings-btn" class="btn btn-secondary btn-icon">
+                    <i class="fas fa-cog"></i>
+                </button>
+            </div>
+        </header>
+        
+        <!-- =========================================================
+             SIDEBAR WITH CHARACTER LIST
+             ========================================================= -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>Your Characters</h2>
+                <button id="create-character-btn" class="btn btn-primary btn-icon">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+            
+            <div class="sidebar-content">
+                <div class="character-list" id="character-list">
+                    <!-- Characters will be loaded here -->
+                </div>
+            </div>
+            
+            <div class="sidebar-footer">
+                <button id="import-export-btn" class="btn btn-secondary btn-icon" style="width: 100%;">
+                    <i class="fas fa-file-import"></i>
+                    <span>Import/Export</span>
+                </button>
+            </div>
+        </aside>
+        
+        <!-- =========================================================
+             MAIN CONTENT AREA WITH HOMEPAGE
+             ========================================================= -->
+        <main class="main-content">
+            <!-- Initially show the homepage -->
+            <div class="homepage-container" id="homepage">
+                <!-- Hero Section -->
+                <section class="homepage-hero">
+                    <div class="hero-content">
+                        <h1>AI Character Chat</h1>
+                        <p>Create, chat, and adventure with intelligent AI characters that remember your interactions and develop unique relationships.</p>
+                        <div class="hero-buttons">
+                            <button id="hp-create-character-btn" class="btn btn-primary">Create a Character</button>
+                            <button id="hp-create-scenario-btn" class="btn btn-secondary">Create a Scenario</button>
+                        </div>
+                    </div>
+                    <div class="hero-gradient-bottom"></div>
+                </section>
+                
+                <div class="homepage-content">
+                    <!-- Tabs for Featured/Trending/New -->
+                    <div class="homepage-tabs">
+                        <div class="homepage-tab active" data-tab="featured">Featured</div>
+                        <div class="homepage-tab" data-tab="trending">Trending</div>
+                        <div class="homepage-tab" data-tab="new">New</div>
+                        <div class="homepage-tab" data-tab="your">Your Characters</div>
+                    </div>
+                    
+                    <!-- Featured Characters Section -->
+                    <div class="homepage-section" id="featured-characters-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Featured Characters</h2>
+                            <a href="#" class="section-link">View All →</a>
+                        </div>
+                        
+                        <div class="character-grid" id="featured-characters-grid">
+                            <!-- Loading placeholders -->
+                            <div class="loading-placeholder" id="character-loading-1"></div>
+                            <div class="loading-placeholder" id="character-loading-2"></div>
+                            <div class="loading-placeholder" id="character-loading-3"></div>
+                            <div class="loading-placeholder" id="character-loading-4"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Popular Scenarios Section -->
+                    <div class="homepage-section" id="popular-scenarios-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Popular Scenarios</h2>
+                            <a href="#" class="section-link">View All →</a>
+                        </div>
+                        
+                        <div class="scenario-grid" id="popular-scenarios-grid">
+                            <!-- Loading placeholders -->
+                            <div class="loading-placeholder" id="scenario-loading-1"></div>
+                            <div class="loading-placeholder" id="scenario-loading-2"></div>
+                            <div class="loading-placeholder" id="scenario-loading-3"></div>
+                            <div class="loading-placeholder" id="scenario-loading-4"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Create Your Own Section -->
+                    <div class="create-section">
+                        <div class="create-container">
+                            <div class="create-content">
+                                <h2 class="create-title">Create Your Own Experience</h2>
+                                <p class="create-description">Design unique characters with distinct personalities or craft immersive scenarios that captivate your imagination.</p>
+                                <div class="hero-buttons">
+                                    <button id="hp-create-character-btn2" class="whitebtn">Create Character</button>
+                                    <button id="hp-create-scenario-btn2" class="btn btn-secondary">Create Scenario</button>
+                                </div>
+                            </div>
+                            <div class="create-visual">
+                                <div>
+                                    <span class="emoji-icon">✨</span>
+                                    <p>Unleash your creativity</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Explore Categories -->
+                    <div class="homepage-section" id="categories-section">
+                        <h2 class="section-title">Explore by Category</h2>
+                        <div class="category-grid">
+                            <a href="#" class="category-card">
+                                <span class="category-icon">🧙‍♂️</span>
+                                <span class="category-name">Fantasy</span>
+                            </a>
+                            <a href="#" class="category-card">
+                                <span class="category-icon">🚀</span>
+                                <span class="category-name">Sci-Fi</span>
+                            </a>
+                            <a href="#" class="category-card">
+                                <span class="category-icon">📜</span>
+                                <span class="category-name">Historical</span>
+                            </a>
+                            <a href="#" class="category-card">
+                                <span class="category-icon">🏙️</span>
+                                <span class="category-name">Modern</span>
+                            </a>
+                            <a href="#" class="category-card">
+                                <span class="category-icon">✨</span>
+                                <span class="category-name">Anime</span>
+                            </a>
+                            <a href="#" class="category-card">
+                                <span class="category-icon">🔍</span>
+                                <span class="category-name">Mystery</span>
+                            </a>
+                            <a href="#" class="category-card">
+                                <span class="category-icon">👻</span>
+                                <span class="category-name">Horror</span>
+                            </a>
+                            <a href="#" class="category-card">
+                                <span class="category-icon">❤️</span>
+                                <span class="category-name">Romance</span>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Getting Started Section -->
+                    <div class="steps-container">
+                        <h2 class="section-title">Getting Started</h2>
+                        <div class="steps-grid">
+                            <div class="step-item">
+                                <div class="step-number">1</div>
+                                <h3 class="step-title">Choose a Character</h3>
+                                <p class="step-description">Select from hundreds of AI characters or create your own custom character.</p>
+                            </div>
+                            <div class="step-item">
+                                <div class="step-number">2</div>
+                                <h3 class="step-title">Start Chatting</h3>
+                                <p class="step-description">Engage in natural conversations or embark on immersive roleplaying adventures.</p>
+                            </div>
+                            <div class="step-item">
+                                <div class="step-number">3</div>
+                                <h3 class="step-title">Build Relationships</h3>
+                                <p class="step-description">Characters remember your interactions and develop unique relationships over time.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Community Highlights -->
+                    <div class="homepage-section" id="community-section">
+                        <h2 class="section-title">Community Highlights</h2>
+                        <div class="community-grid">
+                            <div class="testimonial-card">
+                                <div class="testimonial-header">
+                                    <div class="testimonial-user">
+                                        <img src="/static/img/placeholder-avatar.png" alt="User" class="user-avatar">
+                                        <span class="user-name">AlexWriter</span>
+                                    </div>
+                                    <span class="testimonial-date">2 days ago</span>
+                                </div>
+                                <div class="testimonial-content">
+                                    "I created a detective character who helps me brainstorm mystery plots for my novel. The insights are incredible!"
+                                </div>
+                            </div>
+                            <div class="testimonial-card">
+                                <div class="testimonial-header">
+                                    <div class="testimonial-user">
+                                        <img src="/static/img/placeholder-avatar.png" alt="User" class="user-avatar">
+                                        <span class="user-name">RPGMaster</span>
+                                    </div>
+                                    <span class="testimonial-date">1 week ago</span>
+                                </div>
+                                <div class="testimonial-content">
+                                    "The player action system makes roleplaying so immersive! My character's reactions to success and failure are always dramatic and fitting."
+                                </div>
+                            </div>
+                            <div class="testimonial-card">
+                                <div class="testimonial-header">
+                                    <div class="testimonial-user">
+                                        <img src="/static/img/placeholder-avatar.png" alt="User" class="user-avatar">
+                                        <span class="user-name">StoryCrafter</span>
+                                    </div>
+                                    <span class="testimonial-date">3 days ago</span>
+                                </div>
+                                <div class="testimonial-content">
+                                    "I've created an entire fantasy world with interconnected characters. It's like having my own interactive novel!"
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- CTA Footer -->
+                <section class="cta-section">
+                    <h2 class="cta-title">Start Your Adventure Today</h2>
+                    <p class="cta-description">Join thousands of users creating and interacting with AI characters in countless scenarios.</p>
+                    <button id="hp-get-started-btn" class="whitebtn">Get Started for Free</button>
+                </section>
+            </div>
+            
+            <!-- Welcome Screen (shown when no character is selected) -->
+            <div class="welcome-screen hidden" id="welcome-screen">
+                <div class="welcome-logo">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <h1 class="welcome-title">Welcome to AI Character Chat</h1>
+                <p class="welcome-text">
+                    Create and chat with AI characters that remember your conversations, develop opinions, and express emotions. Select a character from the sidebar or create a new one to get started.
+                </p>
+                <button id="welcome-create-btn" class="get-started-btn">
+                    <i class="fas fa-plus"></i> Create Your First Character
+                </button>
+            </div>
+            
+            <!-- Chat Interface (shown when a character is selected) -->
+            <div class="chat-interface hidden" id="chat-interface">
+                <div class="chat-header">
+                    <div class="character-info">
+                        <h2 id="character-name">Character Name</h2>
+                        <div class="character-details">
+                            <span id="character-mood"><i class="fas fa-smile"></i> Neutral</span>
+                            <span id="character-opinion"><i class="fas fa-heart"></i> Neutral</span>
+                        </div>
+                    </div>
+                    <div class="header-controls">
+                        <button id="edit-character-btn" class="btn btn-secondary btn-sm">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button id="chat-options-btn" class="btn btn-secondary btn-sm">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- This is where chat messages will be displayed -->
+                <div id="chat-messages" class="chat-messages-container"></div>
+            </div>
+        </main>
+        
+        <!-- Player Stats Panel -->
+        <div id="player-stats-panel" class="player-stats-panel hidden">
+            <div class="stats-header">
+                <h3>Character Stats</h3>
+                <button id="edit-stats-btn" class="btn btn-sm btn-secondary">
+                    <i class="fas fa-edit"></i> Edit
+                </button>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <label>Strength</label>
+                    <div class="stat-value" data-stat="strength">10</div>
+                </div>
+                <div class="stat-item">
+                    <label>Dexterity</label>
+                    <div class="stat-value" data-stat="dexterity">10</div>
+                </div>
+                <div class="stat-item">
+                    <label>Constitution</label>
+                    <div class="stat-value" data-stat="constitution">10</div>
+                </div>
+                <div class="stat-item">
+                    <label>Intelligence</label>
+                    <div class="stat-value" data-stat="intelligence">10</div>
+                </div>
+                <div class="stat-item">
+                    <label>Wisdom</label>
+                    <div class="stat-value" data-stat="wisdom">10</div>
+                </div>
+                <div class="stat-item">
+                    <label>Charisma</label>
+                    <div class="stat-value" data-stat="charisma">10</div>
+                </div>
+                <div class="stat-item">
+                    <label>Level</label>
+                    <div class="stat-value" data-stat="level">1</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fixed bottom chat controls container with all bottom elements -->
+    <div class="chat-controls-container hidden" id="chat-controls">
+        <!-- Player Stats Panel (visible in Act mode) with toggle option -->
+        <div id="player-stats-panel" class="player-stats-panel hidden">
+            <div class="stats-header">
+                <h3>Character Stats</h3>
+                <div class="stats-controls">
+                    <button id="toggle-stats-btn" class="btn btn-sm btn-secondary">
+                        <i class="fas fa-chevron-up"></i> Hide Stats
+                    </button>
+                    <button id="edit-stats-btn" class="btn btn-sm btn-secondary">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                </div>
+            </div>
+            <div class="stats-grid" id="stats-grid">
+                <div class="stat-item">
+                    <label>Strength</label>
+                    <div class="stat-value" data-stat="strength">10</div>
+                </div>
+                <div class="stat-item">
+                    <label>Dexterity</label>
+                    <div class="stat-value" data-stat="dexterity">10</div>
+                </div>
+                <div class="stat-item">
+                    <label>Constitution</label>
+                    <div class="stat-value" data-stat="constitution">10</div>
+                </div>
+                <div class="stat-item">
+                    <label>Intelligence</label>
+                    <div class="stat-value" data-stat="intelligence">10</div>
+                </div>
+                <div class="stat-item">
+                    <label>Wisdom</label>
+                    <div class="stat-value" data-stat="wisdom">10</div>
+                </div>
+                <div class="stat-item">
+                    <label>Charisma</label>
+                    <div class="stat-value" data-stat="charisma">10</div>
+                </div>
+                <div class="stat-item">
+                    <label>Level</label>
+                    <div class="stat-value" data-stat="level">1</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Result Display (appears when taking actions) -->
+        <div class="action-result hidden" id="action-result">
+            <div class="result-icon">
+                <i class="fas fa-dice-d20"></i>
+            </div>
+            <div class="result-content">
+                <div class="result-title">Action Result</div>
+                <div class="result-value">Success!</div>
+                <div class="result-details">Strength Check: 15 vs DC 10</div>
+            </div>
+        </div>
+
+        <!-- Chat Input with Action Toggle -->
+        <div class="chat-input-container">
+            <!-- Input mode toggle -->
+            <div class="input-mode-toggle" id="input-mode-toggle">
+                <div class="toggle-option" data-mode="speak" id="speak-toggle">
+                    <i class="fas fa-comment"></i> Speak
+                </div>
+                <div class="toggle-option" data-mode="act" id="act-toggle">
+                    <i class="fas fa-running"></i> Act
+                </div>
+            </div>
+            
+            <!-- Action resolution settings -->
+            <div class="action-resolution-settings" id="action-resolution-settings">
+                <div class="form-group">
+                    <label>Action Resolution Mode:</label>
+                    <select id="action-resolution-mode" class="form-input">
+                        <option value="always-succeed">Always Succeed</option>
+                        <option value="stat-based">Stat-Based</option>
+                        <option value="dnd-system">D&D System</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Input area -->
+            <div class="chat-input-wrapper">
+                <div class="input-mode-indicator" id="input-mode-indicator">
+                    <span id="current-mode">Speaking</span>
+                </div>
+                <div class="chat-toolbar">
+                    <button class="toolbar-btn" title="Attach file">
+                        <i class="fas fa-paperclip"></i>
+                    </button>
+                    <button class="toolbar-btn toggle-action-mode" title="Toggle Action Mode" id="quick-toggle-action">
+                        <i class="fas fa-exchange-alt"></i>
+                    </button>
+                    <button class="toolbar-btn" title="Emoji">
+                        <i class="fas fa-smile"></i>
+                    </button>
+                    <button class="toolbar-btn" title="Voice input">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                </div>
+                <textarea 
+                    id="message-input" 
+                    class="chat-input" 
+                    placeholder="Type your message..." 
+                    rows="1"></textarea>
+                <button id="send-btn" class="send-btn">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- =========================================================
+        CHARACTER CREATION MODAL
+        ========================================================= -->
+    <div class="modal-backdrop hidden" id="character-modal">
+        <div class="modal modal-wide">
+            <div class="modal-header">
+                <h3 class="modal-title" id="character-modal-title">Create New Character</h3>
+                <button class="modal-close" id="character-modal-close">&times;</button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="character-creation-container">
+                    <div class="tabs">
+                        <div class="tab active" data-tab="basic">Basic Info</div>
+                        <div class="tab" data-tab="appearance">Appearance</div>
+                        <div class="tab" data-tab="personality">Personality</div>
+                        <div class="tab" data-tab="stats">Stats</div>
+                        <div class="tab" data-tab="ai-generation">AI Generation</div>
+                    </div>
+                    
+                    <div class="character-tabs-content">
+                        <!-- Basic Info Tab -->
+                        <div class="tab-content active" id="tab-basic">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label" for="character-name-input">Name</label>
+                                    <input type="text" id="character-name-input" class="form-input" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label" for="character-category">Category</label>
+                                    <select id="character-category" class="form-input">
+                                        <option value="fantasy">Fantasy</option>
+                                        <option value="sci-fi">Sci-Fi</option>
+                                        <option value="historical">Historical</option>
+                                        <option value="modern">Modern</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group col-span-2">
+                                    <label class="form-label" for="character-description-input">Description</label>
+                                    <textarea id="character-description-input" class="form-input" placeholder="Who is this character? What's their background story?"></textarea>
+                                </div>
+                                
+                                <div class="form-group col-span-2">
+                                    <label class="form-label" for="character-greeting">Greeting Message</label>
+                                    <textarea id="character-greeting" class="form-input" placeholder="How does this character greet the user when starting a conversation?"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Appearance Tab -->
+                        <div class="tab-content hidden" id="tab-appearance">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label">Avatar</label>
+                                    <div class="flex gap-2 mb-4">
+                                        <div class="character-avatar" style="width: 64px; height: 64px;">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                        <div>
+                                            <button class="btn btn-secondary mb-4">
+                                                <i class="fas fa-upload"></i> Upload
+                                            </button>
+                                            <button class="btn btn-secondary">
+                                                <i class="fas fa-magic"></i> Generate
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label class="form-label">Avatar Style</label>
+                                    <select class="form-input">
+                                        <option value="realistic">Realistic</option>
+                                        <option value="anime">Anime</option>
+                                        <option value="cartoon">Cartoon</option>
+                                        <option value="pixel">Pixel Art</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group col-span-2">
+                                    <label class="form-label" for="character-appearance">Physical Appearance</label>
+                                    <textarea id="character-appearance" class="form-input" placeholder="Describe the character's physical appearance, clothing, and distinctive features."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Personality Tab -->
+                        <div class="tab-content hidden" id="tab-personality">
+                            <div class="form-group">
+                                <label class="form-label" for="character-personality-input">Personality</label>
+                                <textarea id="character-personality-input" class="form-input" rows="5" placeholder="Describe the character's personality traits, habits, likes, dislikes, etc."></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Personality Traits</label>
+                                <div class="form-grid">
+                                    <div>
+                                        <label class="form-label">Extroverted</label>
+                                        <input type="range" min="1" max="10" value="5" class="form-input">
+                                    </div>
+                                    <div>
+                                        <label class="form-label">Agreeable</label>
+                                        <input type="range" min="1" max="10" value="5" class="form-input">
+                                    </div>
+                                    <div>
+                                        <label class="form-label">Conscientious</label>
+                                        <input type="range" min="1" max="10" value="5" class="form-input">
+                                    </div>
+                                    <div>
+                                        <label class="form-label">Emotional</label>
+                                        <input type="range" min="1" max="10" value="5" class="form-input">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="character-speaking-style">Speaking Style</label>
+                                <textarea id="character-speaking-style" class="form-input" placeholder="How does this character speak? Do they use specific phrases, have an accent, or speak in a particular manner?"></textarea>
+                            </div>
+                        </div>
+                        
+                        <!-- Stats Tab -->
+                        <div class="tab-content hidden" id="tab-stats">
+                            <div class="form-group">
+                                <label class="form-label">Character Stats</label>
+                                <p class="mb-4">Set the character's abilities and level. These stats will be used for action resolution.</p>
+                                
+                                <div class="stats-edit-grid">
+                                    <div class="form-group">
+                                        <label class="form-label">Strength</label>
+                                        <input type="number" class="form-input" id="char-strength" min="1" max="20" value="10">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Dexterity</label>
+                                        <input type="number" class="form-input" id="char-dexterity" min="1" max="20" value="10">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Constitution</label>
+                                        <input type="number" class="form-input" id="char-constitution" min="1" max="20" value="10">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Intelligence</label>
+                                        <input type="number" class="form-input" id="char-intelligence" min="1" max="20" value="10">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Wisdom</label>
+                                        <input type="number" class="form-input" id="char-wisdom" min="1" max="20" value="10">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Charisma</label>
+                                        <input type="number" class="form-input" id="char-charisma" min="1" max="20" value="10">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group mt-4">
+                                    <label class="form-label">Character Level</label>
+                                    <input type="number" class="form-input" id="char-level" min="1" max="20" value="1">
+                                    <p class="form-hint">Level affects action resolution bonuses.</p>
+                                </div>
+                                
+                                <div class="form-group mt-4">
+                                    <button id="randomize-stats-btn" class="btn btn-secondary">
+                                        <i class="fas fa-random"></i> Randomize Stats
+                                    </button>
+                                    <button id="reset-default-stats-btn" class="btn btn-secondary">
+                                        <i class="fas fa-undo"></i> Reset to Default
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- AI Generation Tab -->
+                        <div class="tab-content hidden" id="tab-ai-generation">
+                            <div class="ai-generator">
+                                <div class="ai-generator-header">
+                                    <h3 class="ai-generator-title">AI Character Generator</h3>
+                                    <div class="form-toggle">
+                                        <label class="toggle-switch">
+                                            <input type="checkbox" id="ai-generator-toggle">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                        <span>Enable AI generation</span>
+                                    </div>
+                                </div>
+                                
+                                <p class="mb-4">Describe what you want in your character, and the AI will generate a description and personality.</p>
+                                
+                                <div class="form-group">
+                                    <label class="form-label" for="ai-prompt-input">Character Prompt</label>
+                                    <textarea 
+                                        id="ai-prompt-input" 
+                                        class="form-input" 
+                                        rows="4" 
+                                        placeholder="Example: A friendly wizard librarian who loves tea and solving puzzles, but is forgetful and socially awkward." 
+                                        disabled></textarea>
+                                </div>
+                                
+                                <button id="generate-character-button" class="btn btn-primary" disabled>
+                                    <i class="fas fa-magic"></i> Generate Character
+                                </button>
+                                
+                                <div id="generation-status" class="mt-4 hidden">
+                                    <div class="spinner" style="width: 24px; height: 24px; border-width: 3px;"></div>
+                                    <span>Generating character...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button id="cancel-button" class="btn btn-secondary">Cancel</button>
+                <button id="save-character-button" class="btn btn-primary">Save Character</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- =========================================================
+        SETTINGS MODAL
+        ========================================================= -->
+    <div class="modal-backdrop hidden" id="settings-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Settings</h3>
+                <button class="modal-close" id="settings-modal-close">&times;</button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="tabs">
+                    <div class="tab active" data-tab="general">General</div>
+                    <div class="tab" data-tab="api">API Settings</div>
+                    <div class="tab" data-tab="models">AI Models</div>
+                    <div class="tab" data-tab="advanced">Advanced</div>
+                    <div class="tab" data-tab="prompts">Prompts</div>
+                </div>
+                
+                <div class="tab-content active" id="tab-general">
+                    <div class="form-group mt-4">
+                        <label class="form-label">Theme</label>
+                        <select id="theme-select" class="form-input">
+                            <option value="light">Light</option>
+                            <option value="dark">Dark</option>
+                            <option value="system">System (auto)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Font Size</label>
+                        <select name="font-size" class="form-input">
+                            <option value="small">Small</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="large">Large</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Message Display</label>
+                        <select name="message-display" class="form-input">
+                            <option value="bubbles" selected>Bubble Style</option>
+                            <option value="blocks">Block Style</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Interaction Display Mode</label>
+                        <select name="interaction-mode" class="form-input">
+                            <option value="simple">Simple (Chat Only)</option>
+                            <option value="novel">Novel (With Scene Descriptions)</option>
+                            <option value="cinematic">Cinematic (Immersive)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="tab-content hidden" id="tab-api">
+                    <div class="form-group mt-4">
+                        <label class="form-label" for="api-key-input">OpenRouter API Key</label>
+                        <input type="password" id="api-key-input" class="form-input">
+                    </div>
+                    
+                    <button id="test-connection-btn" class="btn btn-primary mt-2">
+                        Test Connection
+                    </button>
+                    
+                    <div class="form-group mt-4">
+                        <label class="form-label">Local Model Settings</label>
+                        <div class="form-toggle mb-4">
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="local-model-toggle">
+                                <span class="toggle-slider"></span>
+                            </label>
+                            <span>Enable local model fallback</span>
+                        </div>
+                        
+                        <input type="text" id="local-model-url" class="form-input" placeholder="http://localhost:11434/api/generate">
+                    </div>
+                </div>
+                
+                <div class="tab-content hidden" id="tab-models">
+                    <div class="form-group mt-4">
+                        <label class="form-label" for="model-select">Default Model</label>
+                        <select id="model-select" class="form-input">
+                            <!-- Models will be loaded dynamically -->
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Model Parameters</label>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Temperature</label>
+                            <input type="range" min="0" max="2" step="0.1" value="0.7" name="temperature" class="form-input">
+                            <div class="flex" style="justify-content: space-between">
+                                <span>More Focused (0)</span>
+                                <span>More Creative (2)</span>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Response Length</label>
+                            <select name="response-length" class="form-input">
+                                <option value="short">Short</option>
+                                <option value="medium" selected>Medium</option>
+                                <option value="long">Long</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-content hidden" id="tab-advanced">
+                    <div class="form-group mt-4">
+                        <label class="form-label">System Prompt Template</label>
+                        <textarea name="system-prompt" class="form-input" rows="6" placeholder="Customize the system prompt template used for character interactions..."></textarea>
+                        <p class="mt-2" style="font-size: 0.8rem; color: var(--text-light);">
+                            Use variables like {name}, {description}, {personality}, etc.
+                        </p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Memory Settings</label>
+                        <div class="form-group">
+                            <label class="form-label">Conversation Memory</label>
+                            <select name="conversation-memory" class="form-input">
+                                <option value="5">Last 5 messages</option>
+                                <option value="10" selected>Last 10 messages</option>
+                                <option value="20">Last 20 messages</option>
+                                <option value="all">All messages</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <button class="btn btn-secondary" id="clear-character-data-btn">
+                            <i class="fas fa-database"></i> Clear All Character Data
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Enhanced Prompts Tab -->
+                <div class="tab-content hidden" id="tab-prompts">
+                    <div class="form-group mt-4">
+                        <div class="form-group mt-4">
+                            <div class="flex justify-between mb-2">
+                                <h3 class="text-lg font-medium">Prompt Templates</h3>
+                                <div class="prompt-actions">
+                                    <button id="save-prompts-btn" class="btn btn-sm btn-primary">
+                                        <i class="fas fa-save"></i> Save
+                                    </button>
+                                    <button id="reset-prompts-btn" class="btn btn-sm btn-secondary">
+                                        <i class="fas fa-undo"></i> Reset to Default
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Replace tab navigation with category selector -->
+                            <div class="template-category-selector">
+                                <select id="template-category" class="form-input">
+                                    <option value="character">Character Definition</option>
+                                    <option value="interaction">Interaction & Context</option>
+                                    <option value="scene">Scene & Environment</option>
+                                    <option value="actions">Player Actions</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Character Definition Category -->
+                            <div class="template-category" id="category-character">
+                                <div class="tabs-inner mb-4">
+                                    <div class="tab active" data-tab-inner="basic-prompt">Basic</div>
+                                    <div class="tab" data-tab-inner="appearance">Appearance</div>
+                                    <div class="tab" data-tab-inner="personality">Personality</div>
+                                </div>
+                                
+                                <!-- Basic Prompt Content -->
+                                <div class="tab-inner-content active" id="tab-inner-basic-prompt">
+                                    <div class="form-group">
+                                        <label class="form-label">Base Prompt Template</label>
+                                        <textarea id="base-prompt-template" class="form-input" rows="6"></textarea>
+                                        <p class="form-hint">Core instructions for the character. Variables: <span class="template-variable">{name}</span>, <span class="template-variable">{description}</span>, <span class="template-variable">{personality}</span></p>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="form-label">Introduction Template</label>
+                                        <textarea id="introduction-template" class="form-input" rows="4"></textarea>
+                                        <p class="form-hint">How the character introduces themselves. Variables: <span class="template-variable">{greeting}</span></p>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="form-label">Speaking Style Template</label>
+                                        <textarea id="speaking-style-template" class="form-input" rows="4"></textarea>
+                                        <p class="form-hint">How the character speaks. Variables: <span class="template-variable">{speaking_style}</span></p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Appearance Content -->
+                                <div class="tab-inner-content hidden" id="tab-inner-appearance">
+                                    <div class="form-group">
+                                        <label class="form-label">Appearance Template</label>
+                                        <textarea id="appearance-template" class="form-input" rows="6"></textarea>
+                                        <p class="form-hint">Physical appearance description. Variables: <span class="template-variable">{appearance}</span></p>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="form-label">Physical Description Template</label>
+                                        <textarea id="physical-description-template" class="form-input" rows="4"></textarea>
+                                        <p class="form-hint">Detailed physical attributes and features</p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Personality Content -->
+                                <div class="tab-inner-content hidden" id="tab-inner-personality">
+                                    <div class="form-group">
+                                        <label class="form-label">Personality Template</label>
+                                        <textarea id="personality-template" class="form-input" rows="6"></textarea>
+                                        <p class="form-hint">Character personality traits. Variables: <span class="template-variable">{personality}</span></p>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="form-label">Mood & Emotions Template</label>
+                                        <textarea id="mood-emotions-template" class="form-input" rows="4"></textarea>
+                                        <p class="form-hint">How character expresses emotions. Variables: <span class="template-variable">{mood}</span>, <span class="template-variable">{emotions_str}</span></p>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="form-label">Opinion Template</label>
+                                        <textarea id="opinion-template" class="form-input" rows="4"></textarea>
+                                        <p class="form-hint">How character feels about user. Variables: <span class="template-variable">{opinion_of_user}</span></p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Interaction & Context Category -->
+                            <div class="template-category hidden" id="category-interaction">
+                                <div class="tabs-inner mb-4">
+                                    <div class="tab active" data-tab-inner="context">Context</div>
+                                    <div class="tab" data-tab-inner="roleplay">Roleplay</div>
+                                    <div class="tab" data-tab-inner="response">Format</div>
+                                </div>
+                                
+                                <!-- Context Content -->
+                                <div class="tab-inner-content active" id="tab-inner-context">
+                                    <div class="form-group">
+                                        <label class="form-label">Location Template</label>
+                                        <textarea id="location-template" class="form-input" rows="4"></textarea>
+                                        <p class="form-hint">Where the character is. Variables: <span class="template-variable">{location}</span></p>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="form-label">Action Template</label>
+                                        <textarea id="action-template" class="form-input" rows="4"></textarea>
+                                        <p class="form-hint">What the character is doing. Variables: <span class="template-variable">{action}</span></p>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="form-label">Memory Template</label>
+                                        <textarea id="memory-template" class="form-input" rows="4"></textarea>
+                                        <p class="form-hint">How character remembers past interactions</p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Roleplay Content -->
+                                <div class="tab-inner-content hidden" id="tab-inner-roleplay">
+                                    <div class="form-group">
+                                        <label class="form-label">Roleplaying Instructions Template</label>
+                                        <textarea id="roleplaying-instructions-template" class="form-input" rows="6"></textarea>
+                                        <p class="form-hint">How character should roleplay</p>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="form-label">Consistency Template</label>
+                                        <textarea id="consistency-template" class="form-input" rows="4"></textarea>
+                                        <p class="form-hint">Instructions for maintaining character consistency</p>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="form-label">Action Resolution Template</label>
+                                        <textarea id="action-resolution-template" class="form-input" rows="4"></textarea>
+                                        <p class="form-hint">How character handles player actions</p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Response Format Content -->
+                                <div class="tab-inner-content hidden" id="tab-inner-response">
+                                    <div class="form-group">
+                                        <label class="form-label">Response Format Template</label>
+                                        <textarea id="response-format-template" class="form-input" rows="6"></textarea>
+                                        <p class="form-hint">How responses should be structured</p>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="form-label">JSON Structure Template</label>
+                                        <textarea id="json-structure-template" class="form-input" rows="6"></textarea>
+                                        <p class="form-hint">For structured response formats</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Scene & Environment Category -->
+                            <div class="template-category hidden" id="category-scene">
+                                <div class="tabs-inner mb-4">
+                                    <div class="tab active" data-tab-inner="scene-desc">Scene</div>
+                                    <div class="tab" data-tab-inner="environment">Environment</div>
+                                    <div class="tab" data-tab-inner="cinematic">Cinematic</div>
+                                </div>
+                                
+                                <!-- Scene Description Content -->
+                                <div class="tab-inner-content active" id="tab-inner-scene-desc">
+                                    <div class="form-group">
+                                        <label class="form-label">Scene Description Template</label>
+                                        <textarea id="scene-description-template" class="form-input" rows="6"></textarea>
+                                        <p class="form-hint">How scenes are described</p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Environment Content -->
+                                <div class="tab-inner-content hidden" id="tab-inner-environment">
+                                    <div class="form-group">
+                                        <label class="form-label">Environment Template</label>
+                                        <textarea id="environment-template" class="form-input" rows="6"></textarea>
+                                        <p class="form-hint">Environment description style</p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Cinematic Content -->
+                                <div class="tab-inner-content hidden" id="tab-inner-cinematic">
+                                    <div class="form-group">
+                                        <label class="form-label">Cinematic Template</label>
+                                        <textarea id="cinematic-template" class="form-input" rows="6"></textarea>
+                                        <p class="form-hint">For cinematic presentation style</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Player Actions Category -->
+                            <div class="template-category hidden" id="category-actions">
+                                <div class="tabs-inner mb-4">
+                                    <div class="tab active" data-tab-inner="success">Success</div>
+                                    <div class="tab" data-tab-inner="failure">Failure</div>
+                                    <div class="tab" data-tab-inner="skills">Skills</div>
+                                </div>
+                                
+                                <!-- Success Content -->
+                                <div class="tab-inner-content active" id="tab-inner-success">
+                                    <div class="form-group">
+                                        <label class="form-label">Action Success Template</label>
+                                        <textarea id="player-action-success-template" class="form-input" rows="6"></textarea>
+                                        <p class="form-hint">Template for successful action resolution. Variables: <span class="template-variable">{action}</span>, <span class="template-variable">{stat}</span>, <span class="template-variable">{roll_value}</span></p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Failure Content -->
+                                <div class="tab-inner-content hidden" id="tab-inner-failure">
+                                    <div class="form-group">
+                                        <label class="form-label">Action Failure Template</label>
+                                        <textarea id="player-action-failure-template" class="form-input" rows="6"></textarea>
+                                        <p class="form-hint">Template for failed action resolution. Variables: <span class="template-variable">{action}</span>, <span class="template-variable">{stat}</span>, <span class="template-variable">{roll_value}</span></p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Skills Content -->
+                                <div class="tab-inner-content hidden" id="tab-inner-skills">
+                                    <div class="form-group">
+                                        <label class="form-label">Skill Check Description</label>
+                                        <textarea id="skill-check-description-template" class="form-input" rows="4"></textarea>
+                                        <p class="form-hint">Describes how stat-based checks are narrated.</p>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="form-label">Action Consequences</label>
+                                        <textarea id="action-consequences-template" class="form-input" rows="4"></textarea>
+                                        <p class="form-hint">Describes how actions affect the environment and narrative.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Preview Section -->
+                            <div class="form-group mt-4">
+                                <div class="flex items-center justify-between">
+                                    <button id="preview-prompt-btn" class="btn btn-secondary">
+                                        <i class="fas fa-eye"></i> Preview Complete Prompt
+                                    </button>
+                                </div>
+                                
+                                <div id="prompt-preview" class="mt-4 hidden p-3 border rounded bg-background-color whitespace-pre-wrap">
+                                    <h4 class="mb-4">Prompt Preview</h4>
+                                    <pre></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button id="settings-cancel-btn" class="btn btn-secondary">Cancel</button>
+                <button id="settings-save-btn" class="btn btn-primary">Save Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- =========================================================
+        PLAYER STATS EDIT MODAL
+        ========================================================= -->
+    <div class="modal-backdrop hidden" id="stats-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Edit Character Stats</h3>
+                <button class="modal-close" id="stats-modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="stats-edit-grid">
+                    <div class="form-group">
+                        <label class="form-label">Strength</label>
+                        <input type="number" class="form-input" id="edit-strength" min="1" max="20" value="10">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Dexterity</label>
+                        <input type="number" class="form-input" id="edit-dexterity" min="1" max="20" value="10">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Constitution</label>
+                        <input type="number" class="form-input" id="edit-constitution" min="1" max="20" value="10">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Intelligence</label>
+                        <input type="number" class="form-input" id="edit-intelligence" min="1" max="20" value="10">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Wisdom</label>
+                        <input type="number" class="form-input" id="edit-wisdom" min="1" max="20" value="10">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Charisma</label>
+                        <input type="number" class="form-input" id="edit-charisma" min="1" max="20" value="10">
+                    </div>
+                </div>
+                
+                <div class="form-group mt-4">
+                    <label class="form-label">Character Level</label>
+                    <input type="number" class="form-input" id="edit-level" min="1" max="20" value="1">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="cancel-stats-button" class="btn btn-secondary">Cancel</button>
+                <button id="save-stats-button" class="btn btn-primary">Save Stats</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-container hidden">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Action Result Display -->
+    <div class="action-result hidden" id="action-result">
+        <div class="result-icon">
+            <i class="fas fa-dice-d20"></i>
+        </div>
+        <div class="result-content">
+            <div class="result-title">Action Result</div>
+            <div class="result-value">Success!</div>
+            <div class="result-details">Strength Check: 15 vs DC 10</div>
+        </div>
+    </div>
+
+    <!-- Include the original JavaScript files -->
+    <script src="/static/js/utils.js"></script>
+    <script src="/static/js/core.js"></script>
+    <script src="/static/js/theme.js"></script>
+    <script src="/static/js/settings.js"></script>
+    <script src="/static/js/prompt-templates.js"></script>
+    <script src="/static/js/character.js"></script>
+    <script src="/static/js/chat.js"></script>
+    <script src="/static/js/player-action.js"></script>
+    <script src="/static/js/interactions.js"></script>
+    <script src="/static/js/chat-instances.js"></script>
+    <!-- Include the homepage JS -->
+    <script src="/static/js/homepage.js"></script>
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
