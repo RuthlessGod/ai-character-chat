@@ -204,6 +204,97 @@ def generate_json():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+@ai_bp.route('/api/generate-field', methods=['POST'])
+def generate_field():
+    """
+    Generate content for a specific character field.
+    
+    Expects JSON with:
+    - prompt: The user's description of what they want
+    - field_type: The type of field to generate (name, description, greeting, etc.)
+    - use_local_model (optional): Whether to use the local model
+    
+    Returns:
+    - JSON with the generated content
+    """
+    try:
+        data = request.get_json()
+        
+        if not data:
+            return jsonify({"error": "Request data is required"}), 400
+            
+        if 'prompt' not in data:
+            return jsonify({"error": "Prompt is required"}), 400
+            
+        if 'field_type' not in data:
+            return jsonify({"error": "Field type is required"}), 400
+        
+        prompt = data.get('prompt')
+        field_type = data.get('field_type')
+        use_local_model = data.get('use_local_model', False)
+        
+        # Define appropriate system prompts based on field type
+        system_prompts = {
+            'name': "You are a creative writer specializing in character names. Generate a single name appropriate for the description. Respond with just the name, no explanation.",
+            'description': "You are a creative writer specializing in character backgrounds. Create a rich, detailed character description based on the prompt. No meta-commentary.",
+            'greeting': "You are a creative writer specializing in character dialogue. Create a greeting message that this character would say when first meeting someone. Make it match their personality. First person perspective only.",
+            'appearance': "You are a creative writer specializing in character descriptions. Create a detailed physical description of a character based on the prompt, including their clothing and distinctive features. No meta-commentary.",
+            'personality': "You are a creative writer specializing in character development. Create a detailed personality description based on the prompt, including traits, habits, likes and dislikes. No meta-commentary.",
+            'speaking-style': "You are a creative writer specializing in dialogue. Describe in detail how this character speaks, including any speech patterns, accents, or phrases they commonly use. No meta-commentary."
+        }
+        
+        # Set system prompt based on field type
+        system_prompt = system_prompts.get(field_type, "You are a creative writer. Generate content based on the prompt.")
+        
+        # Create field-specific prompt
+        field_prompts = {
+            'name': f"Generate a character name based on this description: {prompt}",
+            'description': f"Write a rich character background and description based on: {prompt}",
+            'greeting': f"Create a greeting message that this character would say when first meeting someone. Character info: {prompt}",
+            'appearance': f"Describe the physical appearance of a character based on: {prompt}",
+            'personality': f"Create a detailed personality description for a character based on: {prompt}",
+            'speaking-style': f"Describe in detail how this character speaks based on: {prompt}"
+        }
+        
+        formatted_prompt = field_prompts.get(field_type, prompt)
+        
+        # Generate content using appropriate API
+        if use_local_model and Config.LOCAL_MODEL_ENDPOINT:
+            content = get_local_model_response(
+                system_prompt=system_prompt,
+                user_message=formatted_prompt,
+                temperature=0.7
+            )
+        else:
+            content = get_openrouter_response(
+                system_prompt=system_prompt,
+                user_message=formatted_prompt,
+                temperature=0.7
+            )
+        
+        # Clean up the response
+        if field_type == 'name':
+            # Remove quotes and extra spaces for names
+            content = content.strip().strip('"\'').strip()
+            
+            # Limit to reasonable name length
+            if len(content) > 50:
+                content = content[:50]
+        
+        return jsonify({
+            "success": True,
+            "content": content,
+            "field_type": field_type
+        })
+            
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({
+            "success": False,
+            "message": str(e)
+        }), 500
+
 def get_openrouter_response(system_prompt, user_message, temperature=0.7, max_tokens=None):
     """
     Get a response from OpenRouter API.

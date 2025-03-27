@@ -1295,6 +1295,193 @@ function generateAppropriateStats(description, personality) {
     setStatsInCharacterForm(stats);
 }
 
+// Field-specific AI generation
+let currentAIField = {
+    field: '',
+    targetId: ''
+};
+
+// Show the field AI generator modal
+function showFieldAIGeneratorModal(fieldName, targetId) {
+    // Get modal elements
+    const modal = document.getElementById('field-ai-generator-modal');
+    const titleEl = document.getElementById('field-ai-modal-title');
+    const promptEl = document.getElementById('field-ai-prompt');
+    const statusEl = document.getElementById('field-ai-status');
+    
+    if (!modal || !titleEl || !promptEl) {
+        console.warn('Field AI generator modal elements not found');
+        return;
+    }
+    
+    // Store current field information
+    currentAIField = {
+        field: fieldName,
+        targetId: targetId
+    };
+    
+    // Set title based on field
+    const fieldDisplayNames = {
+        'name': 'Name',
+        'description': 'Description',
+        'greeting': 'Greeting Message',
+        'appearance': 'Physical Appearance',
+        'personality': 'Personality',
+        'speaking-style': 'Speaking Style'
+    };
+    
+    titleEl.textContent = `Generate ${fieldDisplayNames[fieldName] || fieldName}`;
+    
+    // Set placeholder text based on field
+    const placeholders = {
+        'name': 'Example: "A strong female warrior name with Nordic origins"',
+        'description': 'Example: "A mysterious elf ranger who grew up in an ancient forest and protects the wilderness"',
+        'greeting': 'Example: "A warm greeting from a friendly tavern keeper who knows everyone\'s favorite drink"',
+        'appearance': 'Example: "A tall, elegant sorceress with silver hair and flowing purple robes"',
+        'personality': 'Example: "A cheerful but forgetful wizard who loves collecting magical artifacts"',
+        'speaking-style': 'Example: "An eloquent noble who speaks formally and uses flowery language"'
+    };
+    
+    // Reset inputs
+    promptEl.value = '';
+    promptEl.placeholder = placeholders[fieldName] || 'Describe what you want for this field';
+    
+    // Reset status
+    statusEl.classList.add('hidden');
+    
+    // Show modal
+    modal.classList.remove('hidden');
+    
+    // Focus on prompt input
+    promptEl.focus();
+}
+
+// Generate content for a specific field
+async function generateFieldContent() {
+    const modal = document.getElementById('field-ai-generator-modal');
+    const promptEl = document.getElementById('field-ai-prompt');
+    const statusEl = document.getElementById('field-ai-status');
+    
+    if (!promptEl || !statusEl) {
+        console.warn('Field AI generator elements not found');
+        return;
+    }
+    
+    const prompt = promptEl.value.trim();
+    if (!prompt) {
+        window.utils.showNotification('Please enter a description for what you want to generate.', 'warning');
+        return;
+    }
+    
+    // Show loading status
+    statusEl.classList.remove('hidden');
+    
+    try {
+        console.log(`Generating field content for ${currentAIField.field} with prompt: ${prompt}`);
+        
+        // Determine what type of content to generate based on field
+        const fieldType = currentAIField.field;
+        
+        // Get local model setting
+        const useLocalModel = window.state.settings.model === 'local';
+        
+        // Make request to backend to generate specific field content
+        const response = await fetch(`${window.API.BASE_URL}${window.API.GENERATE_FIELD}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-API-Key': window.state.settings.apiKey
+            },
+            body: JSON.stringify({
+                prompt: prompt,
+                field_type: fieldType,
+                use_local_model: useLocalModel
+            })
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Failed to generate ${fieldType}: ${response.statusText}`);
+        }
+        
+        const result = await response.json();
+        
+        if (result.success && result.content) {
+            console.log(`Generated ${fieldType} content:`, result.content);
+            
+            // Find the target input and update its value
+            const targetInput = document.getElementById(currentAIField.targetId);
+            if (targetInput) {
+                targetInput.value = result.content;
+                
+                // Trigger input event to make sure change is recognized
+                const event = new Event('input', { bubbles: true });
+                targetInput.dispatchEvent(event);
+            }
+            
+            // Close the modal
+            modal.classList.add('hidden');
+            
+            window.utils.showNotification(`${fieldType} generated successfully!`, 'success');
+        } else {
+            throw new Error(`Failed to generate ${fieldType}: ${result.message || 'Unknown error'}`);
+        }
+    } catch (error) {
+        console.error(`Error generating ${currentAIField.field}:`, error);
+        window.utils.showNotification(`Failed to generate ${currentAIField.field}. Please try again.`, 'error');
+    } finally {
+        // Hide status
+        statusEl.classList.add('hidden');
+    }
+}
+
+// Initialize field AI generator
+function initFieldAIGenerator() {
+    // Add event listeners to all field generate buttons
+    const generateButtons = document.querySelectorAll('.field-ai-generate-btn');
+    generateButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const fieldName = e.currentTarget.dataset.field;
+            const targetId = e.currentTarget.dataset.target;
+            if (fieldName && targetId) {
+                showFieldAIGeneratorModal(fieldName, targetId);
+            }
+        });
+    });
+    
+    // Add event listeners to modal controls
+    const modal = document.getElementById('field-ai-generator-modal');
+    const closeBtn = document.getElementById('field-ai-modal-close');
+    const cancelBtn = document.getElementById('field-ai-cancel');
+    const generateBtn = document.getElementById('field-ai-generate');
+    
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            modal.classList.add('hidden');
+        });
+    }
+    
+    if (cancelBtn) {
+        cancelBtn.addEventListener('click', () => {
+            modal.classList.add('hidden');
+        });
+    }
+    
+    if (generateBtn) {
+        generateBtn.addEventListener('click', generateFieldContent);
+    }
+    
+    // Add key listeners for prompt input
+    const promptInput = document.getElementById('field-ai-prompt');
+    if (promptInput) {
+        promptInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && e.ctrlKey) {
+                e.preventDefault();
+                generateFieldContent();
+            }
+        });
+    }
+}
+
 // Initialize character management
 function initCharacterManagement() {
     console.log('Initializing character management...');
@@ -1386,6 +1573,9 @@ function initCharacterManagement() {
             });
         });
     }
+    
+    // Initialize field AI generator
+    initFieldAIGenerator();
     
     // Make generateCharacter function available globally
     window.generateCharacter = generateCharacter;

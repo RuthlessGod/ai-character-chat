@@ -10,6 +10,7 @@ const API = {
     CONFIG: '/api/config',
     TEST_CONNECTION: '/api/config/test-connection',
     GENERATE: '/api/generate-character',
+    GENERATE_FIELD: '/api/generate-field',
     DIAGNOSTIC: '/api/diagnostic',
     PROMPTS: '/api/prompts',
     PROMPTS_DEFAULT: '/api/prompts/default',

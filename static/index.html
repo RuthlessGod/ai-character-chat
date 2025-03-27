@@ -473,7 +473,12 @@
                             <div class="form-grid">
                                 <div class="form-group">
                                     <label class="form-label" for="character-name-input">Name</label>
-                                    <input type="text" id="character-name-input" class="form-input" required>
+                                    <div class="input-with-button">
+                                        <input type="text" id="character-name-input" class="form-input" required>
+                                        <button class="field-ai-generate-btn" data-field="name" data-target="character-name-input">
+                                            <i class="fas fa-magic"></i>
+                                        </button>
+                                    </div>
                                 </div>
                                 
                                 <div class="form-group">
@@ -489,12 +494,22 @@
                                 
                                 <div class="form-group col-span-2">
                                     <label class="form-label" for="character-description-input">Description</label>
-                                    <textarea id="character-description-input" class="form-input" placeholder="Who is this character? What's their background story?"></textarea>
+                                    <div class="input-with-button">
+                                        <textarea id="character-description-input" class="form-input" placeholder="Who is this character? What's their background story?"></textarea>
+                                        <button class="field-ai-generate-btn" data-field="description" data-target="character-description-input">
+                                            <i class="fas fa-magic"></i>
+                                        </button>
+                                    </div>
                                 </div>
                                 
                                 <div class="form-group col-span-2">
                                     <label class="form-label" for="character-greeting">Greeting Message</label>
-                                    <textarea id="character-greeting" class="form-input" placeholder="How does this character greet the user when starting a conversation?"></textarea>
+                                    <div class="input-with-button">
+                                        <textarea id="character-greeting" class="form-input" placeholder="How does this character greet the user when starting a conversation?"></textarea>
+                                        <button class="field-ai-generate-btn" data-field="greeting" data-target="character-greeting">
+                                            <i class="fas fa-magic"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -531,7 +546,12 @@
                                 
                                 <div class="form-group col-span-2">
                                     <label class="form-label" for="character-appearance">Physical Appearance</label>
-                                    <textarea id="character-appearance" class="form-input" placeholder="Describe the character's physical appearance, clothing, and distinctive features."></textarea>
+                                    <div class="input-with-button">
+                                        <textarea id="character-appearance" class="form-input" placeholder="Describe the character's physical appearance, clothing, and distinctive features."></textarea>
+                                        <button class="field-ai-generate-btn" data-field="appearance" data-target="character-appearance">
+                                            <i class="fas fa-magic"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -540,7 +560,12 @@
                         <div class="tab-content hidden" id="tab-personality">
                             <div class="form-group">
                                 <label class="form-label" for="character-personality-input">Personality</label>
-                                <textarea id="character-personality-input" class="form-input" rows="5" placeholder="Describe the character's personality traits, habits, likes, dislikes, etc."></textarea>
+                                <div class="input-with-button">
+                                    <textarea id="character-personality-input" class="form-input" rows="5" placeholder="Describe the character's personality traits, habits, likes, dislikes, etc."></textarea>
+                                    <button class="field-ai-generate-btn" data-field="personality" data-target="character-personality-input">
+                                        <i class="fas fa-magic"></i>
+                                    </button>
+                                </div>
                             </div>
                             
                             <div class="form-group">
@@ -567,7 +592,12 @@
                             
                             <div class="form-group">
                                 <label class="form-label" for="character-speaking-style">Speaking Style</label>
-                                <textarea id="character-speaking-style" class="form-input" placeholder="How does this character speak? Do they use specific phrases, have an accent, or speak in a particular manner?"></textarea>
+                                <div class="input-with-button">
+                                    <textarea id="character-speaking-style" class="form-input" placeholder="How does this character speak? Do they use specific phrases, have an accent, or speak in a particular manner?"></textarea>
+                                    <button class="field-ai-generate-btn" data-field="speaking-style" data-target="character-speaking-style">
+                                        <i class="fas fa-magic"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         
@@ -1132,6 +1162,33 @@
             <div class="result-title">Action Result</div>
             <div class="result-value">Success!</div>
             <div class="result-details">Strength Check: 15 vs DC 10</div>
+        </div>
+    </div>
+
+    <!-- Field AI Generator Popup -->
+    <div id="field-ai-generator-modal" class="modal-backdrop hidden">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="field-ai-modal-title">Generate Character Field</h3>
+                <button class="modal-close" id="field-ai-modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label" for="field-ai-prompt">Describe what you want</label>
+                    <textarea id="field-ai-prompt" class="form-input" rows="4" 
+                        placeholder="Describe what you want for this field"></textarea>
+                </div>
+                <div id="field-ai-status" class="mt-4 hidden">
+                    <div class="spinner" style="width: 24px; height: 24px; border-width: 3px;"></div>
+                    <span>Generating...</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="field-ai-cancel" class="btn btn-secondary">Cancel</button>
+                <button id="field-ai-generate" class="btn btn-primary">
+                    <i class="fas fa-magic"></i> Generate
+                </button>
+            </div>
         </div>
     </div>
 

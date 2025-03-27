@@ -2465,3 +2465,46 @@ Copy.template-category-selector {
 #chat-interface.hidden, #chat-controls.hidden {
     display: none !important;
 }
+
+/* Input with button */
+.input-with-button {
+    position: relative;
+    display: flex;
+    width: 100%;
+}
+
+.input-with-button .form-input {
+    flex-grow: 1;
+    width: calc(100% - 40px);
+}
+
+.field-ai-generate-btn {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background-color: var(--primary-light);
+    color: white;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: all var(--transition-speed);
+    margin-left: 8px;
+    align-self: flex-start;
+    margin-top: 0;
+}
+
+.field-ai-generate-btn:hover {
+    background-color: var(--primary-color);
+    transform: scale(1.05);
+}
+
+.field-ai-generate-btn i {
+    font-size: 14px;
+}
+
+/* For textareas, position the button at the top */
+textarea.form-input + .field-ai-generate-btn {
+    margin-top: 0;
+}
