@@ -161,3 +161,71 @@ def register_character_generation_routes(app):
         except Exception as e:
             print(f"Error generating character: {str(e)}")
             return jsonify({"success": False, "message": f"Error generating character: {str(e)}"}), 500
+
+# Helper functions for API calls
+def get_openrouter_response(system_prompt, user_message, temperature=0.7):
+    """
+    Get a response from OpenRouter API.
+    
+    Args:
+        system_prompt (str): The system prompt for the AI
+        user_message (str): The user message to send to the AI
+        temperature (float): Controls randomness in the response
+    
+    Returns:
+        str: The AI response
+    """
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {Config.OPENROUTER_API_KEY}"
+    }
+    
+    generation_data = {
+        "model": Config.DEFAULT_MODEL,
+        "messages": [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_message}
+        ],
+        "temperature": temperature
+    }
+    
+    response = requests.post(
+        "https://openrouter.ai/api/v1/chat/completions",
+        headers=headers,
+        json=generation_data,
+        timeout=30
+    )
+    
+    if response.status_code != 200:
+        raise Exception(f"Error from OpenRouter API: {response.text}")
+    
+    result_text = response.json()["choices"][0]["message"]["content"]
+    return result_text.strip()
+
+def get_local_model_response(system_prompt, user_message, temperature=0.7):
+    """
+    Get a response from a local model.
+    
+    Args:
+        system_prompt (str): The system prompt for the AI
+        user_message (str): The user message to send to the AI
+        temperature (float): Controls randomness in the response
+    
+    Returns:
+        str: The AI response
+    """
+    generation_prompt = f"{system_prompt}\n\nUser prompt: {user_message}\n\nOutput:"
+    
+    generation_data = {
+        "prompt": generation_prompt,
+        "max_tokens": 2000,
+        "temperature": temperature
+    }
+    
+    response = requests.post(Config.LOCAL_MODEL_URL, json=generation_data, timeout=30)
+    
+    if response.status_code != 200:
+        raise Exception(f"Error from local model: {response.text}")
+    
+    result_text = response.json().get("response", "")
+    return result_text.strip()
